@@ -5,7 +5,11 @@
  * - Throws ApiError for non-2xx responses so callers can handle them
  */
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// In production the proxy route (/app/api/[...path]/route.ts) handles all
+// /api/* requests server-side, so BASE_URL must be empty ("") to hit it.
+// NEXT_PUBLIC_API_URL should be unset (or "") on Vercel frontend.
+// For local dev, leave NEXT_PUBLIC_API_URL unset and set BACKEND_ORIGIN in .env.local.
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
 
 export class ApiError extends Error {
   constructor(
