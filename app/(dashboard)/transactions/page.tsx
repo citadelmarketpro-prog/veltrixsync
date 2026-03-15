@@ -276,27 +276,29 @@ export default function TransactionsPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between px-5 py-4 border-t border-[#f0f0ec] dark:border-[#1e3827]">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 border-t border-[#f0f0ec] dark:border-[#1e3827]">
             <span className="text-[12px] text-[#888888] dark:text-[#4a6655]">
               {total} transaction{total !== 1 ? "s" : ""}
             </span>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1 || loading}
-                className="h-9 px-4 border border-[#e5e5e5] dark:border-[#1e3827] text-[13px] text-[#001011] dark:text-white bg-white dark:bg-transparent hover:bg-[#f5f5f5] dark:hover:bg-[#132b1a] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 h-9 px-3 sm:px-4 border border-[#e5e5e5] dark:border-[#1e3827] text-[13px] text-[#001011] dark:text-white bg-white dark:bg-transparent hover:bg-[#f5f5f5] dark:hover:bg-[#132b1a] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Previous
+                <ChevronLeftIcon />
+                <span className="hidden sm:inline">Previous</span>
               </button>
-              <span className="text-[13px] text-[#555555] dark:text-[#8fa896] px-2">
-                Page {page} of {totalPages}
+              <span className="text-[12px] sm:text-[13px] text-[#555555] dark:text-[#8fa896] px-1 whitespace-nowrap">
+                {page} / {totalPages}
               </span>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages || loading}
-                className="h-9 px-4 border border-[#e5e5e5] dark:border-[#1e3827] text-[13px] text-[#001011] dark:text-white bg-white dark:bg-transparent hover:bg-[#f5f5f5] dark:hover:bg-[#132b1a] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 h-9 px-3 sm:px-4 border border-[#e5e5e5] dark:border-[#1e3827] text-[13px] text-[#001011] dark:text-white bg-white dark:bg-transparent hover:bg-[#f5f5f5] dark:hover:bg-[#132b1a] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Next
+                <span className="hidden sm:inline">Next</span>
+                <ChevronRightIcon />
               </button>
             </div>
           </div>
@@ -359,6 +361,22 @@ function ChevronDownIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="4,6 8,10 12,6" />
+    </svg>
+  );
+}
+
+function ChevronLeftIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="10,4 6,8 10,12" />
+    </svg>
+  );
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6,4 10,8 6,12" />
     </svg>
   );
 }

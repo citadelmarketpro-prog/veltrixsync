@@ -70,11 +70,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function handleExpired() {
       // Best-effort: ask server to clear its HttpOnly cookies; ignore errors.
+      // IMPORTANT: must use raw fetch here — api.post() retries on 401, which
+      // fires auth:expired again → infinite loop.
+      // Use direct backend URL locally (cookies live on that origin),
+      // fall back to relative path (via proxy) in production.
+      const logoutUrl = process.env.NEXT_PUBLIC_API_URL
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout/`
+        : "/api/auth/logout/";
       try {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}/api/auth/logout/`,
-          { method: "POST", credentials: "include" },
-        );
+        await fetch(logoutUrl, { method: "POST", credentials: "include" });
       } catch { /* ignore */ }
       setUser(null);
       router.replace("/sign-in");

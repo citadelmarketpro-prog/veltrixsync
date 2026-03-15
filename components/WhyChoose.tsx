@@ -39,7 +39,7 @@ export default function WhyChoose() {
         {/* ── Header — centered ── */}
         <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
           <h2 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold text-[#001011] dark:text-white leading-tight">
-            Why choose SignalSync
+            Why choose VeltrixSync
           </h2>
           <p className="mt-4 text-[15px] sm:text-[16px] lg:text-[17px] leading-[1.7] text-[#666666] dark:text-[#8fa896] max-w-[540px] mx-auto">
             We provide the most advanced copy trading platform with enterprise-grade

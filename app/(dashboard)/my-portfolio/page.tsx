@@ -29,7 +29,7 @@ export default function MyPortfolioPage() {
         {/* Back button */}
         <div className="px-4 lg:px-6 py-4">
           <Link
-            href="/portfolio"
+            href="/dashboard"
             className="inline-flex items-center gap-1.5 h-8 px-3 border border-[#c8c8bc] dark:border-[#1e3827] text-[13px] text-[#444444] dark:text-[#8fa896] hover:bg-[#d8d8cc] dark:hover:bg-[#132b1a] transition-colors"
           >
             <BackArrowIcon />

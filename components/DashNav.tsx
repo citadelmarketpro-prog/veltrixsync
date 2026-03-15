@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,6 +28,7 @@ interface NotifResponse {
 const NAV_ITEMS = [
   { href: "/dashboard",    label: "Dashboard",       icon: <HomeIcon /> },
   { href: "/traders",      label: "Explore traders", icon: <GridIcon /> },
+  { href: "/stocks",       label: "Stocks",          icon: <CandlestickIcon /> },
   { href: "/my-portfolio", label: "My portfolio",    icon: <ChartLineIcon /> },
   { href: "/transactions", label: "Transactions",    icon: <BarChartIcon /> },
   { href: "/news",         label: "News",            icon: <NewsIcon /> },
@@ -94,22 +95,27 @@ export default function DashNav() {
             <span className="font-bold text-[16px] sm:text-[18px] text-[#B0D45A] leading-none">sync</span>
           </Link>
 
-          {/* Desktop nav — centered */}
-          <nav className="hidden md:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2">
+          {/* Desktop nav — flex-1 so it sits between logo and actions without overlapping */}
+          <nav className="hidden md:flex flex-1 items-center justify-center gap-0.5 min-w-0">
             {NAV_ITEMS.map(({ href, label, icon }) => (
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-2 h-9 px-3 text-[13px] transition-colors rounded-sm ${
+                title={label}
+                className={`flex items-center gap-1.5 h-9 px-3 lg:px-3 text-[13px] transition-colors rounded-sm whitespace-nowrap ${
                   isActive(href)
                     ? "font-bold text-[#001011] dark:text-white"
                     : "text-[#555555] dark:text-[#8fa896] hover:text-[#001011] dark:hover:text-white"
                 }`}
               >
-                <span className={isActive(href) ? "text-[#001011] dark:text-white" : "text-[#888888] dark:text-[#4a6655]"}>
+                <span
+                  className={`scale-[1.4] lg:scale-100 transition-transform ${
+                    isActive(href) ? "text-[#001011] dark:text-white" : "text-[#888888] dark:text-[#4a6655]"
+                  }`}
+                >
                   {icon}
                 </span>
-                {label}
+                <span className="hidden lg:inline">{label}</span>
               </Link>
             ))}
           </nav>
@@ -460,22 +466,60 @@ function EditProfileModal({
   onClose: () => void;
 }) {
   const { refreshUser } = useAuth();
-  const [firstName,  setFirstName]  = useState(user?.first_name  ?? "");
-  const [lastName,   setLastName]   = useState(user?.last_name   ?? "");
-  const [username,   setUsername]   = useState(user?.username    ?? "");
-  const [saving,     setSaving]     = useState(false);
-  const [saveError,  setSaveError]  = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [firstName,    setFirstName]    = useState(user?.first_name  ?? "");
+  const [lastName,     setLastName]     = useState(user?.last_name   ?? "");
+  const [username,     setUsername]     = useState(user?.username    ?? "");
+  const [avatarFile,   setAvatarFile]   = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [removeAvatar, setRemoveAvatar] = useState(false);
+  const [saving,       setSaving]       = useState(false);
+  const [saveError,    setSaveError]    = useState("");
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setRemoveAvatar(false);
+    setAvatarPreview(URL.createObjectURL(file));
+    // Reset input so the same file can be re-selected if needed
+    e.target.value = "";
+  }
+
+  function handleRemove() {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+    setRemoveAvatar(true);
+  }
 
   async function handleSave() {
     if (saving) return;
     setSaveError("");
     setSaving(true);
     try {
-      await api.patch("/api/auth/me/", {
-        first_name: firstName.trim(),
-        last_name:  lastName.trim(),
-        username:   username.trim(),
-      });
+      if (removeAvatar) {
+        // Wipe the avatar via FormData so the proxy doesn't block it
+        const form = new FormData();
+        form.append("remove_avatar", "1");
+        form.append("first_name", firstName.trim());
+        form.append("last_name",  lastName.trim());
+        form.append("username",   username.trim());
+        await api.patchForm("/api/auth/me/", form);
+      } else if (avatarFile) {
+        const form = new FormData();
+        form.append("avatar",      avatarFile);
+        form.append("first_name",  firstName.trim());
+        form.append("last_name",   lastName.trim());
+        form.append("username",    username.trim());
+        await api.patchForm("/api/auth/me/", form);
+      } else {
+        await api.patch("/api/auth/me/", {
+          first_name: firstName.trim(),
+          last_name:  lastName.trim(),
+          username:   username.trim(),
+        });
+      }
       await refreshUser();
       onClose();
     } catch (err) {
@@ -488,6 +532,9 @@ function EditProfileModal({
   const displayInitials = firstName
     ? `${firstName[0]}${lastName[0] ?? ""}`.toUpperCase()
     : initials;
+
+  // Which avatar to show: local preview > existing URL > initials fallback
+  const avatarSrc = avatarPreview ?? (removeAvatar ? null : (user?.avatar_url ?? null));
 
   return (
     <div
@@ -509,26 +556,61 @@ function EditProfileModal({
             </button>
           </div>
 
+          {/* Avatar picker */}
           <div className="flex flex-col items-center mb-6">
-            {user?.avatar_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.avatar_url} alt={displayInitials} className="w-17 h-17 rounded-full object-cover mb-3" />
-            ) : (
-              <div
-                className="w-17 h-17 rounded-full flex items-center justify-center text-[22px] font-bold text-[#001011] mb-3"
-                style={{ backgroundColor: "#C1E963" }}
-              >
-                {displayInitials}
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+
+            {/* Avatar preview — clicking it also opens the picker */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="relative group mb-3 focus:outline-none"
+              title="Change photo"
+            >
+              {avatarSrc ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={avatarSrc} alt={displayInitials} className="w-[68px] h-[68px] rounded-full object-cover" />
+              ) : (
+                <div
+                  className="w-[68px] h-[68px] rounded-full flex items-center justify-center text-[22px] font-bold text-[#001011]"
+                  style={{ backgroundColor: "#C1E963" }}
+                >
+                  {displayInitials}
+                </div>
+              )}
+              {/* Camera overlay on hover */}
+              <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <CameraIcon />
               </div>
-            )}
+            </button>
+
             <div className="flex items-center gap-2">
-              <button className="h-8 px-4 border border-[#ef4444] text-[12px] font-medium text-[#ef4444] hover:bg-[#fff5f5] dark:hover:bg-[#2a1515] transition-colors">
+              <button
+                type="button"
+                onClick={handleRemove}
+                disabled={!avatarSrc && !avatarFile}
+                className="h-8 px-4 border border-[#ef4444] text-[12px] font-medium text-[#ef4444] hover:bg-[#fff5f5] dark:hover:bg-[#2a1515] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
                 Remove
               </button>
-              <button className="h-8 px-4 border border-[#d4d4d4] dark:border-[#2a4a34] text-[12px] font-medium text-[#555555] dark:text-[#8fa896] hover:bg-[#f5f5f5] dark:hover:bg-[#1a2a1e] transition-colors">
-                Change
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="h-8 px-4 border border-[#d4d4d4] dark:border-[#2a4a34] text-[12px] font-medium text-[#555555] dark:text-[#8fa896] hover:bg-[#f5f5f5] dark:hover:bg-[#1a2a1e] transition-colors"
+              >
+                {avatarFile ? "Change again" : "Change"}
               </button>
             </div>
+            {avatarFile && (
+              <p className="mt-1.5 text-[11px] text-[#22c55e]">{avatarFile.name}</p>
+            )}
           </div>
 
           {saveError && (
@@ -762,6 +844,30 @@ function GreenCheckCircleIcon() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" stroke="#22c55e" strokeWidth="1.5" />
       <polyline points="8,12 11,15 16,9" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CameraIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </svg>
+  );
+}
+
+function CandlestickIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      {/* Left candle — bullish (tall body, wick top and bottom) */}
+      <line x1="6" y1="3"  x2="6" y2="6"  />
+      <rect x="4" y="6"  width="4" height="7" rx="0.5" />
+      <line x1="6" y1="13" x2="6" y2="16" />
+      {/* Right candle — bearish (shorter body, wick top and bottom) */}
+      <line x1="16" y1="5"  x2="16" y2="8"  />
+      <rect x="14" y="8"  width="4" height="9" rx="0.5" />
+      <line x1="16" y1="17" x2="16" y2="21" />
     </svg>
   );
 }

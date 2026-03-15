@@ -64,7 +64,7 @@ export default function DashboardPage() {
     <div className="min-h-screen dark:bg-[#0c1a10] flex flex-col">
       <DashNav />
       <main className="flex-1 px-4 py-4 lg:px-6 lg:py-5">
-        <div className="max-w-[1100px] mx-auto grid grid-cols-1 xl:grid-cols-[1fr_330px] gap-4">
+        <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_330px] gap-4">
           {/* ── Left ── */}
           <div className="flex flex-col gap-4">
             <PortfolioCard />
@@ -462,7 +462,7 @@ function PortfolioCard() {
               onClick={() => setModal("addFunds")}
               className="h-10 px-7 text-[14px] font-bold text-[#001011] bg-[#C1E963] hover:opacity-90 transition-opacity whitespace-nowrap"
             >
-              Add funds
+              Top up wallet
             </button>
             <button
               onClick={() => setModal("withdraw")}
@@ -763,8 +763,8 @@ function AddFundsModal({ onClose }: { onClose: () => void }) {
             <p className="text-[12px] text-[#888888] dark:text-[#4a6655] mb-6 leading-relaxed">
               Your deposit is pending admin confirmation. If you don&apos;t see the funds within 24 hours,
               contact us at{" "}
-              <a href="mailto:support@signalsync.com" className="text-[#5a9a3c] dark:text-[#B0D45A] hover:underline">
-                support@signalsync.com
+              <a href="mailto:support@veltrixsync.com" className="text-[#5a9a3c] dark:text-[#B0D45A] hover:underline">
+                support@veltrixsync.com
               </a>
             </p>
             <button

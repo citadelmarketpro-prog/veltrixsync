@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Dashboard routes that require authentication
-const PROTECTED = ["/dashboard", "/traders", "/my-portfolio", "/transactions", "/news", "/kyc"];
+const PROTECTED = ["/dashboard", "/traders", "/stocks", "/my-portfolio", "/transactions", "/news", "/kyc"];
 
 // Auth pages that logged-in users should be bounced away from
 const GUEST_ONLY = ["/sign-in", "/sign-up", "/forgot-password", "/reset-password"];
