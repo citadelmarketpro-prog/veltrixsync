@@ -1,44 +1,141 @@
-import Image from "next/image";
+"use client";
+
+import { useRef, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 
+/* ─────────────────────────────────────────────────────────────────
+   Animated particles — lime-green brand palette (#B0D45A)
+──────────────────────────────────────────────────────────────────── */
+function ParticlesBackground() {
+  const canvasRef  = useRef<HTMLCanvasElement>(null);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const rafRef     = useRef<number | null>(null);
+
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const isDark = resolvedTheme === "dark";
+
+    /* ── colours — lime-green #B0D45A = rgb(176, 212, 90) ── */
+    const dotColor   = isDark ? "rgba(176,212,90,0.50)"  : "rgba(3,63,45,0.16)";
+    const lineBase   = isDark ? "176,212,90"              : "3,63,45";
+    const lineMaxA   = isDark ? 0.20                      : 0.07;
+
+    const COUNT = 160;
+    const DIST  = 160;
+
+    const fit = () => {
+      const parent = canvas.parentElement;
+      canvas.width  = parent ? parent.offsetWidth  : window.innerWidth;
+      canvas.height = parent ? parent.offsetHeight : window.innerHeight;
+    };
+    fit();
+
+    type P = { x: number; y: number; vx: number; vy: number; r: number };
+    const pts: P[] = Array.from({ length: COUNT }, () => ({
+      x:  Math.random() * canvas.width,
+      y:  Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.36,
+      vy: (Math.random() - 0.5) * 0.36,
+      r:  Math.random() * 1.7 + 0.6,
+    }));
+
+    const tick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < COUNT; i++) {
+        const p = pts[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        /* dot */
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = dotColor;
+        ctx.fill();
+
+        /* connecting lines */
+        for (let j = i + 1; j < COUNT; j++) {
+          const q  = pts[j];
+          const dx = p.x - q.x;
+          const dy = p.y - q.y;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < DIST) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle = `rgba(${lineBase},${lineMaxA * (1 - d / DIST)})`;
+            ctx.lineWidth   = 0.65;
+            ctx.stroke();
+          }
+        }
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    tick();
+
+    window.addEventListener("resize", fit);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", fit);
+    };
+  }, [mounted, resolvedTheme]);
+
+  if (!mounted) return null;
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full pointer-events-none"
+    />
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Hero
+──────────────────────────────────────────────────────────────────── */
 export default function Hero() {
   return (
     <>
       {/* ════════════════════════════════════════════════════════
-          HERO SECTION — fits 100vh on mobile
+          HERO SECTION
       ════════════════════════════════════════════════════════ */}
       <section className="relative w-full overflow-hidden bg-white dark:bg-[#0b1c11] min-h-[calc(100vh-80px)] flex flex-col justify-between">
 
-        {/* ── Dot-matrix texture ── */}
-        <div className="absolute inset-0 pointer-events-none">
-          <Image
-            src="/images/hero-bg.png"
-            alt=""
-            fill
-            className="object-cover object-center dark:hidden"
-            style={{ opacity: 0.4 }}
-            priority
-          />
-          <Image
-            src="/images/hero-bg.png"
-            alt=""
-            fill
-            className="object-cover object-center hidden dark:block"
-            style={{ mixBlendMode: "screen", opacity: 0.13 }}
-            priority={false}
-          />
-        </div>
+        {/* ── Particle canvas ── */}
+        <ParticlesBackground />
 
-        {/* ── Light mode subtle top gradient ── */}
+        {/* ── Radial glow orb — sits behind the content ── */}
         <div
-          className="absolute inset-x-0 top-0 pointer-events-none dark:hidden"
+          className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
           style={{
-            height: "160px",
-            background: "linear-gradient(to bottom, rgba(193,233,99,0.18) 0%, transparent 100%)",
+            width: "780px",
+            height: "480px",
+            borderRadius: "50%",
+            background: "radial-gradient(ellipse at center, rgba(176,212,90,0.07) 0%, transparent 70%)",
+            filter: "blur(40px)",
           }}
         />
 
-       
+        {/* ── Lime top-edge gradient ── */}
+        <div
+          className="absolute inset-x-0 top-0 pointer-events-none"
+          style={{
+            height: "180px",
+            background: "linear-gradient(to bottom, rgba(176,212,90,0.10) 0%, transparent 100%)",
+          }}
+        />
 
         {/* ── Hero content ── */}
         <div className="relative z-10 flex flex-col items-center text-center px-5 pt-6 sm:pt-10 lg:pt-[88px]">
@@ -51,15 +148,14 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Headline — extra bold, compact on mobile */}
+          {/* Headline */}
           <h1 className="font-extrabold leading-[1.06] tracking-tight text-[#001011] dark:text-white max-w-[860px] text-[22px] sm:text-[44px] lg:text-[72px]">
             Copy Futures, Options &{" "}
             <span className="block sm:inline">Contracts with Precision</span>
           </h1>
 
-          {/* Subtitle — tighter on mobile */}
+          {/* Subtitle */}
           <p className="mt-2 sm:mt-5 lg:mt-6 max-w-200 text-[13px] sm:text-[15px] lg:text-[17px] leading-[1.65] text-[#666666] dark:text-[#8fa896]">
-            
             We empower you to mirror real-time stock and options trades from top-performing traders. Whether you&apos;re following tickers, contracts, or strategic options moves, our platform brings precision, flexibility, and transparency—straight to your fingertips
           </p>
 
@@ -74,7 +170,7 @@ export default function Hero() {
             </Link>
             <Link
               href="/sign-up"
-              className="w-full inline-flex items-center justify-center h-11 sm:h-[52px] border border-[#c8d8c0] dark:border-[#2a4a34] px-8 text-[14px] sm:text-[15px] font-medium text-[#001011]  hover:opacity-70 transition-opacity"
+              className="w-full inline-flex items-center justify-center h-11 sm:h-[52px] border border-[#c8d8c0] dark:border-[#2a4a34] px-8 text-[14px] sm:text-[15px] font-medium text-[#001011] hover:opacity-70 transition-opacity"
               style={{ backgroundColor: "#f9fdef" }}
             >
               View expert traders
@@ -85,27 +181,19 @@ export default function Hero() {
         {/* ── Video / trader network visual ── */}
         <div className="relative z-10 w-full flex flex-col items-center mt-4 sm:mt-8 lg:mt-10 px-5 lg:px-0">
           <div className="w-full max-w-75 sm:max-w-100 lg:max-w-125 mx-auto">
-            {/* Light mode video */}
             <video
               src="/images/banner-video-light.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
+              autoPlay muted loop playsInline
               className="w-full dark:hidden"
             />
-            {/* Dark mode video */}
             <video
               src="/images/banner-video-dark.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
+              autoPlay muted loop playsInline
               className="w-full hidden dark:block"
             />
           </div>
 
-          {/* ── Globally Regulated badge ── */}
+          {/* Globally Regulated badge */}
           <div className="flex items-center justify-center gap-3 py-4 sm:py-5">
             <GloballyRegulatedIcon />
             <span className="text-[22px] sm:text-[24px] lg:text-[28px] font-bold text-[#001011] dark:text-white">
@@ -144,105 +232,14 @@ function StatItem({ value, label }: { value: string; label: string }) {
   );
 }
 
-function FloatingCard({
-  name,
-  role,
-  online,
-}: {
-  name: string;
-  role: string;
-  online?: boolean;
-}) {
-  /* Hero.svg: 134×40px, rx=20, bg #F8F9F6, border 1.5px #FDFDFC */
-  return (
-    <div
-      className="dark:bg-[#132b1a] dark:border-[#1e3827]"
-      style={{
-        width: "134px",
-        height: "40px",
-        borderRadius: "20px",
-        backgroundColor: "#F8F9F6",
-        border: "1.5px solid #FDFDFC",
-        display: "flex",
-        alignItems: "center",
-        paddingLeft: "8px",
-        paddingRight: "10px",
-        gap: "7px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-      }}
-    >
-      {/* Avatar — bg #F0F1F4 (Hero.svg) */}
-      <div
-        className="shrink-0 dark:bg-[#1e3827]"
-        style={{
-          width: "24px",
-          height: "24px",
-          borderRadius: "50%",
-          backgroundColor: "#F0F1F4",
-        }}
-      />
-
-      {/* Name + role */}
-      <div className="flex-1 min-w-0">
-        <p
-          className="dark:text-white"
-          style={{
-            fontSize: "9px",
-            fontWeight: 700,
-            color: "#001011",
-            lineHeight: 1.3,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {name}
-        </p>
-        <p
-          className="dark:text-[#8fa896]"
-          style={{
-            fontSize: "8px",
-            color: "#666666",
-            lineHeight: 1.3,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {role}
-        </p>
-      </div>
-
-      {/* Online dot — #00A656 (Hero.svg ellipse) */}
-      {online && (
-        <div
-          className="shrink-0"
-          style={{
-            width: "6px",
-            height: "6px",
-            borderRadius: "50%",
-            backgroundColor: "#00A656",
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
 /* ── Icons ──────────────────────────────────────────────────── */
 
-/* Trend-up icon — Hero.svg lines 96–97, stroke #219204 */
 function TrendUpIcon() {
   return (
     <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="#219204"
-      strokeWidth="1.44"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      width="16" height="16" viewBox="0 0 16 16"
+      fill="none" stroke="#219204" strokeWidth="1.44"
+      strokeLinecap="round" strokeLinejoin="round"
       className="shrink-0"
     >
       <polyline points="1,11 5,7 9,9 15,3" />
@@ -251,17 +248,15 @@ function TrendUpIcon() {
   );
 }
 
-/* Globe with checkmark for "Globally Regulated" */
 function GloballyRegulatedIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12">
       <circle cx="14" cy="14" r="11" stroke="#B0D45A" strokeWidth="1.8" />
       <ellipse cx="14" cy="14" rx="5.5" ry="11" stroke="#B0D45A" strokeWidth="1.4" />
-      <line x1="3" y1="10" x2="25" y2="10" stroke="#B0D45A" strokeWidth="1.4" />
-      <line x1="3" y1="18" x2="25" y2="18" stroke="#B0D45A" strokeWidth="1.4" />
+      <line x1="3"  y1="10" x2="25" y2="10" stroke="#B0D45A" strokeWidth="1.4" />
+      <line x1="3"  y1="18" x2="25" y2="18" stroke="#B0D45A" strokeWidth="1.4" />
       <circle cx="20" cy="20" r="5" fill="#B0D45A" />
       <path d="M17.5 20l1.5 1.5 3-3" stroke="#001011" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
-
