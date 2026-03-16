@@ -64,7 +64,7 @@ export default function Hero() {
           </p>
 
           {/* CTA buttons */}
-          <div className="mt-4 sm:mt-8 lg:mt-10 flex flex-col items-stretch gap-2.5 sm:gap-4 w-full max-w-[340px] sm:max-w-none mx-auto sm:mx-0">
+          <div className="mt-4 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 w-full max-w-[340px] sm:max-w-[560px] mx-auto">
             <Link
               href="/sign-up"
               className="w-full inline-flex items-center justify-center h-11 sm:h-[52px] px-8 text-[14px] sm:text-[15px] font-bold transition-opacity hover:opacity-90"

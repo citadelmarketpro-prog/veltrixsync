@@ -63,7 +63,7 @@ export default function Navbar() {
           {/* Get Started */}
           <Link
             href="/sign-up"
-            className="inline-flex items-center justify-center h-8 lg:h-[44px] px-3.5 lg:px-6 text-[12px] lg:text-[14px] font-bold transition-opacity hover:opacity-90"
+            className="md:inline-flex hidden items-center justify-center h-8 lg:h-[44px] px-3.5 lg:px-6 text-[12px] lg:text-[14px] font-bold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#C1E963", color: "#001011" }}
           >
             Get Started
