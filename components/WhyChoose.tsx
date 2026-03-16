@@ -3,31 +3,37 @@ const features = [
     title: "Transparent Options Copying",
     description:
       "See exactly what you're mirroring—ticker, strategy, side (call/put), strike, expiry, entry/exit premium, size, and timestamps—plus a clear history of each leader's performance and drawdowns. No hidden fees, no black-box trades.",
+    icon: "/icons/clipboard-export.svg",
   },
   {
     title: "Advanced Tools for Contracts",
     description:
       "Dial in risk before you copy: per-trade caps, %-of-equity allocation, max contracts, slippage guard (max premium), chain filters (min OI/volume, max bid-ask spread), and auto-hedge toggles for volatile names.",
+    icon: "/icons/note-2.svg",
   },
   {
     title: "Innovative Execution for Multi-Legs",
     description:
       "Copy simple contracts or complex structures as a unit: verticals, calendars, iron condors, butterflies. We sync legs, preserve ratios, and apply best-effort routing to help reduce mis-fills and legging risk when leaders trade.",
+    icon: "/icons/gemini.svg",
   },
   {
     title: "Trader-Centric Support",
     description:
       "Human help when it matters—real people on chat, phone, and email for account linking, order settings, and contract-specific questions (assignments, exercise, expirations).",
+    icon: "/icons/24-support.svg",
   },
   {
     title: "Learn While You Copy",
     description:
       "Leaders can attach notes, rationale, and risk context (IV, Greeks, catalysts) to each trade. Use strategy tags (breakout, earnings, theta, trend) and post-trade debriefs to sharpen your own playbook while you mirror.",
+    icon: "/icons/clipboard.svg",
   },
   {
     title: "Unique Options Features",
     description:
       "AutoGuard™: optional auto-TP/SL by premium, % move, or delta.",
+    icon: "/icons/lock-guard.png",
   },
 ];
 
@@ -70,9 +76,8 @@ export default function WhyChoose() {
                   isFirstLgRow ? "lg:border-b border-[#e8ead8] dark:border-[#1e3827]" : "lg:border-b-0",
                 ].filter(Boolean).join(" ")}
               >
-                {/* Icon placeholder — replace src with your SVG file */}
                 <div className="mb-6 w-16 h-16">
-                  <img src="" alt="" className="w-full h-full object-contain" />
+                  <img src={f.icon} alt={f.title} className="w-full h-full object-contain" />
                 </div>
 
                 <h3 className="text-[18px] sm:text-[20px] lg:text-[22px] font-extrabold text-[#001011] dark:text-white leading-snug mb-3">

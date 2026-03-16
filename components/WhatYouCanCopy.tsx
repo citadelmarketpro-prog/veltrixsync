@@ -3,16 +3,19 @@ const items = [
     title: "Stocks & ETFs",
     description:
       "Full-share orders or fractional allocations, instantaneous entry/exit mirroring, price-based T/P and S/L.",
+    icon: "/icons/trade.png",
   },
   {
     title: "Single-Leg Options (Calls & Puts)",
     description:
       "Replicate trade by trade: ticker, strike, expiry, premium, quantity, and timestamp.",
+    icon: "/icons/clipboard.svg",
   },
   {
     title: "Multi-Leg Options Strategies",
     description:
       "Copy complex structures as a single unit: verticals, iron condors, butterflies, calendars, ratio spreads, etc. We preserve leg ratios and leg timing to reduce legging risk.",
+    icon: "/icons/chart.svg",
   },
 ];
 
@@ -35,9 +38,8 @@ export default function WhatYouCanCopy() {
               key={i}
               className="flex flex-col items-center text-center px-8 py-12 lg:py-16 bg-[#eaeadf] dark:bg-[#0d1f14]"
             >
-              {/* Icon placeholder — replace src with your SVG file */}
               <div className="mb-8 w-12 h-12">
-                <img src="" alt="" className="w-full h-full object-contain" />
+                <img src={item.icon} alt={item.title} className="w-full h-full object-contain" />
               </div>
 
               <h3 className="text-[18px] sm:text-[20px] lg:text-[22px] font-extrabold text-[#033F2D] dark:text-white leading-snug mb-4">

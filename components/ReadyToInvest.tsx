@@ -2,16 +2,19 @@ const steps = [
   {
     title: "Create Your Account.",
     description: "Join now to unlock options-focused copy trading.",
+    icon: "/icons/man.svg",
   },
   {
     title: "Find Your Match",
     description:
       "Explore leaders known for success in options—contracts, spreads, tickers—you name it.",
+    icon: "/icons/crown.svg",
   },
   {
     title: "Copy and grow",
     description:
       "Replicate trades, refine strategies, and learn—all while staying in control.",
+    icon: "/icons/chart.svg",
   },
 ];
 
@@ -34,9 +37,8 @@ export default function ReadyToInvest() {
               key={i}
               className="flex flex-col items-center text-center px-8 py-12 lg:py-16 bg-[#eaeadf] dark:bg-[#0d1f14]"
             >
-              {/* Icon placeholder — replace src with your SVG */}
               <div className="mb-8 w-12 h-12">
-                <img src="" alt="" className="w-full h-full object-contain" />
+                <img src={step.icon} alt="" className="w-full h-full object-contain" />
               </div>
               <h3 className="text-[18px] sm:text-[20px] lg:text-[22px] font-extrabold text-[#033F2D] dark:text-white leading-snug mb-4">
                 {step.title}

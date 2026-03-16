@@ -2,18 +2,22 @@ const stats = [
   {
     title: "Social",
     description: "More than 35 million users globally",
+    icon: "/icons/people.svg",
   },
   {
     title: "Reliable",
     description: "A leader in the fintech space since 2007",
+    icon: "/icons/security-user.svg",
   },
   {
     title: "Secured",
     description: "Utilising best security practices for client money and assets safety",
+    icon: "/icons/lock-guard.png",
   },
   {
     title: "Global",
     description: "Providing services around the world",
+    icon: "/icons/global.svg",
   },
 ];
 
@@ -56,9 +60,8 @@ export default function TrustSection() {
               key={i}
               className="flex flex-col items-center text-center gap-4 px-6 py-10 border border-[#e8ead8] dark:border-[#1e3827]"
             >
-              {/* Icon placeholder — replace src with your SVG */}
               <div className="w-12 h-12">
-                <img src="" alt="" className="w-full h-full object-contain" />
+                <img src={stat.icon} alt={stat.title} className="w-full h-full object-contain" />
               </div>
               <p className="text-[15px] lg:text-[16px] font-extrabold text-[#0a0a0a] dark:text-white">
                 {stat.title}
