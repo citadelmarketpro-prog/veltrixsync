@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -52,10 +53,10 @@ export default function SmartPortfolioPage() {
             a diversified, risk-managed portfolio of top Leaders for you automatically.
           </p>
           <div className="mt-10">
-            <button className="inline-flex items-center gap-2 h-[50px] px-10 rounded-full text-[14px] font-bold hover:opacity-90 transition-opacity" style={{ backgroundColor: "#B0D45A", color: "#001011" }}>
+            <Link href="/sign-up" className="inline-flex items-center gap-2 h-[50px] px-10 rounded-full text-[14px] font-bold hover:opacity-90 transition-opacity" style={{ backgroundColor: "#B0D45A", color: "#001011" }}>
               Build my portfolio
               <Arrow />
-            </button>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -58,13 +59,13 @@ export default function CopyTradingPage() {
             Leaders — so you invest smarter without needing to trade yourself.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <button className="inline-flex items-center gap-2 h-[50px] px-10 rounded-full text-[14px] font-bold hover:opacity-90 transition-opacity" style={{ backgroundColor: "#B0D45A", color: "#001011" }}>
+            <Link href="/sign-up" className="inline-flex items-center gap-2 h-[50px] px-10 rounded-full text-[14px] font-bold hover:opacity-90 transition-opacity" style={{ backgroundColor: "#B0D45A", color: "#001011" }}>
               Start copying
               <Arrow />
-            </button>
-            <button className="inline-flex items-center gap-2 h-[50px] px-8 rounded-full text-[14px] font-semibold border border-[#d0d0d0] dark:border-[#2a4030] text-[#001011] dark:text-white hover:opacity-80 transition-opacity">
+            </Link>
+            <Link href="/sign-up" className="inline-flex items-center gap-2 h-[50px] px-8 rounded-full text-[14px] font-semibold border border-[#d0d0d0] dark:border-[#2a4030] text-[#001011] dark:text-white hover:opacity-80 transition-opacity">
               Browse Leaders
-            </button>
+            </Link>
           </div>
         </div>
       </section>

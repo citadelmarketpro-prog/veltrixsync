@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -145,13 +146,14 @@ export default function BrokerPage() {
           </p>
 
           <div className="mt-10">
-            <button
+            <Link
+              href="/sign-up"
               className="inline-flex items-center gap-2 h-[50px] px-10 rounded-full text-[14px] font-bold transition-opacity hover:opacity-90"
               style={{ backgroundColor: "#B0D45A", color: "#001011" }}
             >
               Book a meeting with us
               <ArrowRightIcon />
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -302,13 +304,14 @@ export default function BrokerPage() {
             Join the leading brokers who have already partnered with VeltrixSync. Let&apos;s
             grow together.
           </p>
-          <button
+          <Link
+            href="/sign-up"
             className="inline-flex items-center gap-2 h-[50px] px-10 rounded-full text-[14px] font-bold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#B0D45A", color: "#001011" }}
           >
             Get started now
             <ArrowRightIcon />
-          </button>
+          </Link>
         </div>
       </section>
 

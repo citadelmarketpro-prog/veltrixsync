@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -50,13 +51,14 @@ export default function AutoGuardPage() {
           </h1>
 
           <div className="mt-8 lg:mt-10">
-            <button
+            <Link
+              href="/sign-up"
               className="inline-flex items-center justify-center gap-2 h-[44px] px-8 rounded-full text-[14px] font-bold transition-opacity hover:opacity-90"
               style={{ backgroundColor: "#C1E963", color: "#001011" }}
             >
               Create account
               <ArrowRightIcon />
-            </button>
+            </Link>
           </div>
         </div>
       </section>

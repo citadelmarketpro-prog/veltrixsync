@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function YouShouldKnow() {
   return (
     <section className="w-full bg-[#f5f5f0] dark:bg-[#0d1a10]">
@@ -37,12 +39,13 @@ export default function YouShouldKnow() {
               top leaders—especially in dynamic options markets.
             </p>
             <div>
-              <button
+              <Link
+                href="/sign-up"
                 className="inline-flex items-center justify-center h-[48px] px-8 text-[14px] font-bold text-[#001011] transition-opacity hover:opacity-90"
                 style={{ backgroundColor: "#C1E963" }}
               >
                 Start copy trading
-              </button>
+              </Link>
             </div>
           </div>
 

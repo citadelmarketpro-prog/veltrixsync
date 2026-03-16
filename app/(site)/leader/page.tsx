@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -176,13 +177,14 @@ export default function LeaderPage() {
           </p>
 
           <div className="mt-10">
-            <button
+            <Link
+              href="/sign-up"
               className="inline-flex items-center gap-2 h-[50px] px-10 rounded-full text-[14px] font-bold transition-opacity hover:opacity-90"
               style={{ backgroundColor: "#B0D45A", color: "#001011" }}
             >
               Create account
               <ArrowRightIcon />
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -223,10 +225,10 @@ export default function LeaderPage() {
                 {activeTabData.body}
               </p>
               <div>
-                <button className="inline-flex items-center gap-2 h-[42px] px-7 rounded-full text-[13px] font-semibold border border-[#d0d0d0] dark:border-[#2a4030] text-[#001011] dark:text-white bg-transparent transition-opacity hover:opacity-70">
+                <Link href="/sign-up" className="inline-flex items-center gap-2 h-[42px] px-7 rounded-full text-[13px] font-semibold border border-[#d0d0d0] dark:border-[#2a4030] text-[#001011] dark:text-white bg-transparent transition-opacity hover:opacity-70">
                   Open account
                   <ArrowRightIcon />
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -308,13 +310,14 @@ export default function LeaderPage() {
             <h2 className="text-[28px] lg:text-[38px] font-bold leading-tight text-[#001011] dark:text-white max-w-sm">
               Reasons to Become a Leader with VeltrixSync
             </h2>
-            <button
+            <Link
+              href="/sign-up"
               className="self-start sm:self-center inline-flex items-center gap-2 h-[44px] px-7 rounded-full text-[13px] font-bold transition-opacity hover:opacity-90 shrink-0"
               style={{ backgroundColor: "#B0D45A", color: "#001011" }}
             >
               Open account
               <ArrowRightIcon />
-            </button>
+            </Link>
           </div>
 
           {/* 2-col bordered grid */}

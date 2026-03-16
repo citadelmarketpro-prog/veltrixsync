@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const steps = [
   {
     title: "Create Your Account.",
@@ -52,12 +54,13 @@ export default function ReadyToInvest() {
 
         {/* ── CTA button ── */}
         <div className="flex justify-center px-6 pt-12 pb-14 lg:pt-14 lg:pb-20">
-          <button
+          <Link
+            href="/sign-up"
             className="inline-flex items-center gap-2 h-12 px-8 text-[14px] font-bold text-[#001011] transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#C1E963" }}
           >
             Get started now →
-          </button>
+          </Link>
         </div>
 
       </div>

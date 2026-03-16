@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -158,16 +159,17 @@ export default function AffiliatePage() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <button
+            <Link
+              href="/sign-up"
               className="inline-flex items-center gap-2 h-[48px] px-8 rounded-full text-[14px] font-bold transition-opacity hover:opacity-90"
               style={{ backgroundColor: "#B0D45A", color: "#001011" }}
             >
               Become an affiliate
               <ArrowRightIcon />
-            </button>
-            <button className="inline-flex items-center gap-2 h-[48px] px-8 rounded-full text-[14px] font-semibold border border-[#d0d0d0] dark:border-[#2a4030] text-[#001011] dark:text-white bg-white/80 dark:bg-[#0d2016]/80 transition-opacity hover:opacity-80">
+            </Link>
+            <Link href="/sign-in" className="inline-flex items-center gap-2 h-[48px] px-8 rounded-full text-[14px] font-semibold border border-[#d0d0d0] dark:border-[#2a4030] text-[#001011] dark:text-white bg-white/80 dark:bg-[#0d2016]/80 transition-opacity hover:opacity-80">
               Login
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -280,13 +282,14 @@ export default function AffiliatePage() {
             <h2 className="text-[28px] lg:text-[38px] font-bold leading-tight text-[#001011] dark:text-white max-w-md">
               Reasons to become an Affiliate
             </h2>
-            <button
+            <Link
+              href="/sign-up"
               className="self-start sm:self-center inline-flex items-center gap-2 h-[44px] px-7 rounded-full text-[13px] font-bold transition-opacity hover:opacity-90 shrink-0"
               style={{ backgroundColor: "#B0D45A", color: "#001011" }}
             >
               Become an affiliate
               <ArrowRightIcon />
-            </button>
+            </Link>
           </div>
 
           {/* 2×3 bordered grid */}

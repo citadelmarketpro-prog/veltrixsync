@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -64,18 +65,20 @@ export default function Hero() {
 
           {/* CTA buttons */}
           <div className="mt-4 sm:mt-8 lg:mt-10 flex flex-col items-stretch gap-2.5 sm:gap-4 w-full max-w-[340px] sm:max-w-none mx-auto sm:mx-0">
-            <button
+            <Link
+              href="/sign-up"
               className="w-full inline-flex items-center justify-center h-11 sm:h-[52px] px-8 text-[14px] sm:text-[15px] font-bold transition-opacity hover:opacity-90"
               style={{ backgroundColor: "#C1E963", color: "#001011" }}
             >
               Start Copying Now
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/sign-up"
               className="w-full inline-flex items-center justify-center h-11 sm:h-[52px] border border-[#c8d8c0] dark:border-[#2a4a34] px-8 text-[14px] sm:text-[15px] font-medium text-[#001011]  hover:opacity-70 transition-opacity"
               style={{ backgroundColor: "#f9fdef" }}
             >
               View expert traders
-            </button>
+            </Link>
           </div>
         </div>
 

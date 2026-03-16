@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { TrendingUp } from "lucide-react";
 
 const traders = [
@@ -75,10 +76,10 @@ export default function TradersSection() {
 
       {/* ── View all button ── */}
       <div className="pb-10 lg:pb-14 flex justify-center px-6">
-        <button className="inline-flex items-center gap-2 h-12 px-8 text-[14px] font-bold transition-opacity hover:opacity-80 border border-[#d8ead8] text-[#001011] dark:border-[#2a4a34] dark:text-white">
+        <Link href="/sign-up" className="inline-flex items-center gap-2 h-12 px-8 text-[14px] font-bold transition-opacity hover:opacity-80 border border-[#d8ead8] text-[#001011] dark:border-[#2a4a34] dark:text-white">
           View all expert traders
           <ArrowRightIcon />
-        </button>
+        </Link>
       </div>
 
     </section>
@@ -151,9 +152,9 @@ function TraderCard({ trader }: { trader: Trader }) {
 
       {/* Copy trader button */}
       <div className="px-4 pb-4">
-        <button className="w-full h-10 border border-[#e5e5e5] dark:border-[#1e3827] text-[13px] font-bold text-[#001011] dark:text-white hover:bg-[#f8f8f5] dark:hover:bg-[#132b1a] transition-colors">
+        <Link href="/sign-up" className="w-full h-10 border border-[#e5e5e5] dark:border-[#1e3827] text-[13px] font-bold text-[#001011] dark:text-white hover:bg-[#f8f8f5] dark:hover:bg-[#132b1a] transition-colors inline-flex items-center justify-center">
           Copy trader
-        </button>
+        </Link>
       </div>
 
     </div>
