@@ -68,7 +68,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Auto-logout when api.ts fires "auth:expired" (refresh token rejected by server)
   useEffect(() => {
+    // Routes that require an active session. Must match middleware.ts PROTECTED list.
+    const PROTECTED_PREFIXES = [
+      "/dashboard", "/traders", "/stocks", "/my-portfolio",
+      "/transactions", "/news", "/kyc",
+    ];
+
     async function handleExpired() {
+      const currentPath = window.location.pathname;
+      const onProtectedRoute = PROTECTED_PREFIXES.some(
+        (p) => currentPath === p || currentPath.startsWith(p + "/"),
+      );
+
       // Best-effort: ask server to clear its HttpOnly cookies; ignore errors.
       // IMPORTANT: must use raw fetch here — api.post() retries on 401, which
       // fires auth:expired again → infinite loop.
@@ -80,8 +91,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         await fetch(logoutUrl, { method: "POST", credentials: "include" });
       } catch { /* ignore */ }
+
       setUser(null);
-      router.replace("/sign-in");
+
+      // Only navigate to sign-in when the expired session was actually needed.
+      // On public pages (homepage, marketing pages, legal pages, etc.) we simply
+      // clear the client state and stay on the page — no redirect required.
+      if (onProtectedRoute) {
+        router.replace(`/sign-in?next=${encodeURIComponent(currentPath)}`);
+      }
     }
 
     window.addEventListener("auth:expired", handleExpired);
