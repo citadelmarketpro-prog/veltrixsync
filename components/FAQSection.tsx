@@ -37,7 +37,7 @@ export default function FAQSection() {
 
         {/* ── Centered header ── */}
         <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16 border-t border-[#e8ead8] dark:border-[#1e3827]">
-          <h2 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold text-[#0a0a0a] dark:text-white leading-tight mb-4">
+          <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#0a0a0a] dark:text-white leading-tight mb-4">
             Your Questions, answered
           </h2>
           <p className="text-[14px] sm:text-[15px] lg:text-[16px] text-[#888888] dark:text-[#8fa896] leading-[1.7] max-w-[480px] mx-auto">

@@ -36,7 +36,7 @@ export default function TrustSection() {
 
         {/* ── Centered heading ── */}
         <div className="text-center px-6 pt-14 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14 border-t border-[#e8ead8] dark:border-[#1e3827]">
-          <h2 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold text-[#0a0a0a] dark:text-white leading-tight">
+          <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#0a0a0a] dark:text-white leading-tight">
             Your funds are held in top-tier institutions
           </h2>
         </div>

@@ -51,27 +51,27 @@ export default function Hero() {
           </div>
 
           {/* Headline — extra bold, compact on mobile */}
-          <h1 className="font-extrabold leading-[1.06] tracking-tight text-[#001011] dark:text-white max-w-[860px] text-[28px] sm:text-[48px] lg:text-[76px]">
+          <h1 className="font-extrabold leading-[1.06] tracking-tight text-[#001011] dark:text-white max-w-[860px] text-[22px] sm:text-[44px] lg:text-[72px]">
             Copy Futures, Options &{" "}
             <span className="block sm:inline">Contracts with Precision</span>
           </h1>
 
           {/* Subtitle — tighter on mobile */}
-          <p className="mt-2 sm:mt-5 lg:mt-6 max-w-200 text-[13px] sm:text-[15px] lg:text-[17px] leading-[1.6] text-[#666666] dark:text-[#8fa896]">
+          <p className="mt-2 sm:mt-5 lg:mt-6 max-w-200 text-[13px] sm:text-[15px] lg:text-[17px] leading-[1.65] text-[#666666] dark:text-[#8fa896]">
             
             We empower you to mirror real-time stock and options trades from top-performing traders. Whether you&apos;re following tickers, contracts, or strategic options moves, our platform brings precision, flexibility, and transparency—straight to your fingertips
           </p>
 
           {/* CTA buttons */}
-          <div className="mt-5 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6 w-full sm:w-auto">
+          <div className="mt-4 sm:mt-8 lg:mt-10 flex flex-col items-stretch gap-2.5 sm:gap-4 w-full max-w-[340px] sm:max-w-none mx-auto sm:mx-0">
             <button
-              className="w-full sm:w-auto inline-flex items-center justify-center h-12 sm:h-[52px] px-8 text-[14px] sm:text-[15px] font-bold transition-opacity hover:opacity-90"
+              className="w-full inline-flex items-center justify-center h-11 sm:h-[52px] px-8 text-[14px] sm:text-[15px] font-bold transition-opacity hover:opacity-90"
               style={{ backgroundColor: "#C1E963", color: "#001011" }}
             >
               Start Copying Now
             </button>
             <button
-              className="w-full sm:w-auto inline-flex items-center justify-center h-12 sm:h-[52px] border border-[#c8d8c0] dark:border-[#2a4a34] px-8 text-[14px] sm:text-[15px] font-medium text-[#001011] hover:opacity-70 transition-opacity"
+              className="w-full inline-flex items-center justify-center h-11 sm:h-[52px] border border-[#c8d8c0] dark:border-[#2a4a34] px-8 text-[14px] sm:text-[15px] font-medium text-[#001011]  hover:opacity-70 transition-opacity"
               style={{ backgroundColor: "#f9fdef" }}
             >
               View expert traders

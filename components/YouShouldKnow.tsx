@@ -5,7 +5,7 @@ export default function YouShouldKnow() {
 
         {/* ── Full-width heading — centered, same size as How it works ── */}
         <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
-          <h2 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold text-[#001011] dark:text-white leading-tight">
+          <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#001011] dark:text-white leading-tight">
             You should know...
           </h2>
         </div>

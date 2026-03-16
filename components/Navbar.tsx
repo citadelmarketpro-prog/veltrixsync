@@ -13,7 +13,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white dark:bg-[#0b1c11] border-b border-[#e5e5e5] dark:border-[#1e3827]">
-      <div className="relative max-w-[1440px] mx-auto px-6 lg:px-[80px] h-[70px] lg:h-[80px] flex items-center justify-between">
+      <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[80px] h-[70px] lg:h-[80px] flex items-center justify-between">
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center shrink-0">
@@ -53,7 +53,7 @@ export default function Navbar() {
           {/* Sign In — visible md+ only */}
           <Link
             href="/sign-in"
-            className="hidden md:inline-flex items-center justify-center h-[44px] px-6 text-[14px] font-bold transition-opacity hover:opacity-80
+            className="hidden md:inline-flex items-center justify-center h-[44px] px-4 text-[14px] font-bold transition-opacity hover:opacity-80
               text-[#001011] bg-white border border-[#d8ead8]
               dark:text-white dark:bg-[#132b1a] dark:border-[#2a4a34]"
           >
@@ -63,7 +63,7 @@ export default function Navbar() {
           {/* Get Started */}
           <Link
             href="/sign-up"
-            className="inline-flex items-center justify-center h-[44px] px-6 text-[14px] font-bold transition-opacity hover:opacity-90"
+            className="inline-flex items-center justify-center h-8 lg:h-[44px] px-3.5 lg:px-6 text-[12px] lg:text-[14px] font-bold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#C1E963", color: "#001011" }}
           >
             Get Started

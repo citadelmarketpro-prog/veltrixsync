@@ -25,7 +25,7 @@ export default function ReadyToInvest() {
 
         {/* ── Centered heading ── */}
         <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16 border-t border-[#e8ead8] dark:border-[#1e3827]">
-          <h2 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold text-[#033F2D] dark:text-white leading-tight">
+          <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#033F2D] dark:text-white leading-tight">
             Ready to Invest Smarter?
           </h2>
         </div>
