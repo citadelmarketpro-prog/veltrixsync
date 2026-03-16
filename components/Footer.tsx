@@ -20,8 +20,8 @@ const navGroups = [
     label: "FEATURES",
     links: [
       { label: "AutoGuard™",     href: "/autoguard" },
-      { label: "Copy Trading",   href: "/copy-trading" },
-      { label: "Smart Portfolio", href: "/smart-portfolio" },
+      // { label: "Copy Trading",   href: "/copy-trading" },
+      // { label: "Smart Portfolio", href: "/smart-portfolio" },
     ],
   },
   {
@@ -30,15 +30,15 @@ const navGroups = [
       { label: "Affiliate Guide", href: "/affiliate-guide" },
       { label: "Leader Guide",    href: "/leader-guide" },
       { label: "User Guide",      href: "/user-guide" },
-      { label: "Blog",            href: "/blog" },
+      // { label: "Blog",            href: "/blog" },
     ],
   },
   {
     label: "ABOUT US",
     links: [
       { label: "Company", href: "/company" },
-      { label: "Careers", href: "/careers" },
-      { label: "Press",   href: "/press" },
+      // { label: "Careers", href: "/careers" },
+      // { label: "Press",   href: "/press" },
     ],
   },
   {
