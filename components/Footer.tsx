@@ -7,53 +7,53 @@ const navGroups = [
   {
     label: "LEGALS",
     links: [
-      { label: "Terms Of Service", href: "#" },
-      { label: "Privacy Policy", href: "#" },
-      { label: "Cookies Policy", href: "#" },
-      { label: "Risk Disclaimer", href: "#" },
-      { label: "Conflict of Interest Policy", href: "#" },
-      { label: "Declaration of Consent", href: "#" },
-      { label: "End-User License Agreement", href: "#" },
+      { label: "Terms Of Service",            href: "/terms" },
+      { label: "Privacy Policy",              href: "/privacy-policy" },
+      { label: "Cookies Policy",              href: "/cookie-policy" },
+      { label: "Risk Disclaimer",             href: "/risk-disclaimer" },
+      { label: "Conflict of Interest Policy", href: "/conflict-of-interest" },
+      { label: "Declaration of Consent",      href: "/declaration-of-consent" },
+      { label: "End-User License Agreement",  href: "/eula" },
     ],
   },
   {
     label: "FEATURES",
     links: [
-      { label: "AutoGuard™", href: "#" },
-      { label: "Copy Trading", href: "#" },
-      { label: "Smart Portfolio", href: "#" },
+      { label: "AutoGuard™",     href: "/autoguard" },
+      { label: "Copy Trading",   href: "/copy-trading" },
+      { label: "Smart Portfolio", href: "/smart-portfolio" },
     ],
   },
   {
     label: "RESOURCES",
     links: [
-      { label: "Affiliate Guide", href: "#" },
-      { label: "Leader Guide", href: "#" },
-      { label: "User Guide", href: "#" },
-      { label: "Blog", href: "#" },
+      { label: "Affiliate Guide", href: "/affiliate-guide" },
+      { label: "Leader Guide",    href: "/leader-guide" },
+      { label: "User Guide",      href: "/user-guide" },
+      { label: "Blog",            href: "/blog" },
     ],
   },
   {
     label: "ABOUT US",
     links: [
-      { label: "Company", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Press", href: "#" },
+      { label: "Company", href: "/company" },
+      { label: "Careers", href: "/careers" },
+      { label: "Press",   href: "/press" },
     ],
   },
   {
     label: "PARTNERSHIPS",
     links: [
-      { label: "Leader", href: "#" },
-      { label: "Affiliate", href: "#" },
-      { label: "Broker", href: "#" },
+      { label: "Leader",    href: "/leader" },
+      { label: "Affiliate", href: "/affiliate" },
+      { label: "Broker",    href: "/broker" },
     ],
   },
   {
     label: "CONTACT",
     links: [
       { label: "support@veltrixsync.com", href: "mailto:support@veltrixsync.com" },
-      { label: "+1 (929) 512-0241", href: "tel:+19295120241" },
+      { label: "+1 (929) 512-0241",       href: "tel:+19295120241" },
     ],
   },
 ];
@@ -73,7 +73,7 @@ export default function Footer() {
           <div className="px-6 lg:px-[72px] py-12 lg:py-16 lg:border-r border-[#e8ead8] dark:border-[#1e3827] flex flex-col gap-5">
             <Link href="/" className="inline-flex items-baseline">
               <span className="font-extrabold text-[24px] text-[#0a0a0a] dark:text-white leading-none">
-                Signal
+                Veltrix
               </span>
               <span className="font-extrabold text-[24px] text-[#B0D45A] leading-none">
                 sync
@@ -81,7 +81,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-[14px] text-[#444444] dark:text-[#8fa896]">
-              Copytrade with Signalsync
+              Copytrade with Veltrixsync
             </p>
 
             <div className="flex gap-3">

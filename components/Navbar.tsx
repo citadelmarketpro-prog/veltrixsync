@@ -18,7 +18,7 @@ export default function Navbar() {
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center shrink-0">
           <span className="font-extrabold leading-none text-[22px] lg:text-[24px] text-[#001011] dark:text-white">
-            Signal
+            Veltrix
           </span>
           <span className="font-extrabold leading-none text-[22px] lg:text-[24px] text-[#B0D45A]">
             sync
