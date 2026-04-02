@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FadeUp, SlideIn } from "@/components/ScrollReveal";
 
 export default function YouShouldKnow() {
   return (
@@ -6,17 +7,17 @@ export default function YouShouldKnow() {
       <div className="max-w-[1440px] mx-auto">
 
         {/* ── Full-width heading — centered, same size as How it works ── */}
-        <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
+        <FadeUp className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
           <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#001011] dark:text-white leading-tight">
             You should know...
           </h2>
-        </div>
+        </FadeUp>
 
         {/* ── Two-column cards ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 border-t border-b border-[#e0e0d8] dark:border-[#1e3827]">
 
           {/* Left — Problem */}
-          <div className="px-6 lg:px-[72px] py-12 lg:py-16 flex flex-col gap-6
+          <SlideIn dir="left" className="px-6 lg:px-[72px] py-12 lg:py-16 flex flex-col gap-6 items-center text-center lg:items-start lg:text-left
             border-b lg:border-b-0 lg:border-r border-[#e0e0d8] dark:border-[#1e3827]">
             <h3 className="text-[20px] sm:text-[22px] lg:text-[24px] font-extrabold text-[#001011] dark:text-white leading-snug">
               Studying the market takes time
@@ -27,10 +28,10 @@ export default function YouShouldKnow() {
               succeed on their own. With VeltrixSync, you can replicate successful
               trades from seasoned options traders to tilt the odds in your favor.
             </p>
-          </div>
+          </SlideIn>
 
           {/* Right — Solution */}
-          <div className="px-6 lg:px-[72px] py-12 lg:py-16 flex flex-col gap-6">
+          <SlideIn dir="right" delay={0.1} className="px-6 lg:px-[72px] py-12 lg:py-16 flex flex-col gap-6 items-center text-center lg:items-start lg:text-left">
             <h3 className="text-[20px] sm:text-[22px] lg:text-[24px] font-extrabold text-[#001011] dark:text-white leading-snug">
               Beat the odds with Copy Trading
             </h3>
@@ -47,7 +48,7 @@ export default function YouShouldKnow() {
                 Start copy trading
               </Link>
             </div>
-          </div>
+          </SlideIn>
 
         </div>
       </div>

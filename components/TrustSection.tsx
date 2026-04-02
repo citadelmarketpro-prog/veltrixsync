@@ -1,3 +1,5 @@
+import { FadeUp, FadeIn, Stagger, StaggerItem } from "@/components/ScrollReveal";
+
 const stats = [
   {
     title: "Social",
@@ -35,28 +37,34 @@ export default function TrustSection() {
       <div className="max-w-[1440px] mx-auto">
 
         {/* ── Centered heading ── */}
-        <div className="text-center px-6 pt-14 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14 border-t border-[#e8ead8] dark:border-[#1e3827]">
+        <FadeUp className="text-center px-6 pt-14 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14 border-t border-[#e8ead8] dark:border-[#1e3827]">
           <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#0a0a0a] dark:text-white leading-tight">
             Your funds are held in top-tier institutions
           </h2>
-        </div>
+        </FadeUp>
 
-        {/* ── Bank logos row ── */}
-        <div className="flex items-center justify-center flex-wrap gap-8 lg:gap-16 px-6 lg:px-[72px] pb-14 lg:pb-16">
-          {logos.map((logo) => (
-            <img
-              key={logo.alt}
-              src={logo.src}
-              alt={logo.alt}
-              className="h-8 sm:h-9 lg:h-10 w-auto object-contain"
-            />
-          ))}
-        </div>
+        {/* ── Bank logos infinite ticker ── */}
+        <FadeIn delay={0.1} className="overflow-hidden pb-14 lg:pb-16 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+          <div
+            className="flex items-center gap-16 lg:gap-24 w-max"
+            style={{ animation: "marquee 22s linear infinite" }}
+          >
+            {/* duplicate 4× for a seamless loop at any viewport width */}
+            {[...logos, ...logos, ...logos, ...logos].map((logo, i) => (
+              <img
+                key={i}
+                src={logo.src}
+                alt={logo.alt}
+                className="h-8 sm:h-9 lg:h-10 w-auto object-contain shrink-0 opacity-70 hover:opacity-100 transition-opacity"
+              />
+            ))}
+          </div>
+        </FadeIn>
 
         {/* ── 4 stat cards ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 px-6 lg:px-[72px] pb-14 lg:pb-20">
+        <Stagger className="grid grid-cols-2 lg:grid-cols-4 gap-4 px-6 lg:px-[72px] pb-14 lg:pb-20">
           {stats.map((stat, i) => (
-            <div
+            <StaggerItem
               key={i}
               className="flex flex-col items-center text-center gap-4 px-6 py-10 border border-[#e8ead8] dark:border-[#1e3827]"
             >
@@ -69,9 +77,9 @@ export default function TrustSection() {
               <p className="text-[13px] lg:text-[14px] leading-[1.7] text-[#888888] dark:text-[#8fa896]">
                 {stat.description}
               </p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
 
       </div>
     </section>

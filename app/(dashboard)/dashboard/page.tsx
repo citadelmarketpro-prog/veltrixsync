@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import DashNav from "@/components/DashNav";
 import { api, ApiError } from "@/lib/api";
 import { toast } from "sonner";
+import { getAssetMeta } from "@/lib/asset-icons";
 
 /* ════════════════════════════════════════════════════════════════
    TYPES
@@ -15,13 +16,16 @@ interface CopyTrade {
   id: number;
   trader_name: string;
   asset: string;
-  trade_type: string;
-  direction: "Long" | "Short";
-  price: string;
+  asset_type: "stock" | "crypto" | "forex";
+  direction: "Buy" | "Sell";
+  entry: string;
+  earning_pct: string;
   pnl: string;
   pnl_display: string;
   pnl_positive: boolean;
+  duration: string;
   status: "open" | "closed" | "pending";
+  created_at: string;
 }
 
 interface CopyingTrader {
@@ -64,18 +68,25 @@ export default function DashboardPage() {
     <div className="min-h-screen dark:bg-[#0c1a10] flex flex-col">
       <DashNav />
       <main className="flex-1 px-4 py-4 lg:px-6 lg:py-5">
-        <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_330px] gap-4">
-          {/* ── Left ── */}
-          <div className="flex flex-col gap-4">
-            <PortfolioCard />
-            <CopiedTradesCard trades={trades} />
-          </div>
-          {/* ── Right ── */}
-          <div className="flex flex-col gap-4">
+        {/* Mobile order: Portfolio → LiveTrading → Breakdown → CopiedTrades → Following
+            Desktop: left col (Portfolio, CopiedTrades) | right col flex (LiveTrading, Breakdown, Following) */}
+        <div className="max-w-[1360px] mx-auto flex flex-col lg:grid lg:grid-cols-[1fr_330px] gap-4">
+          {/* 1 — Portfolio */}
+          <PortfolioCard />
+
+          {/* Right column: display:contents on mobile (items join outer flex individually),
+              flex-col on desktop spanning 2 rows so items stack without left-col row-height influence */}
+          <div className="contents lg:flex lg:flex-col lg:gap-4 lg:row-span-2">
+            {/* 2 — LiveTrading */}
             <LiveTradingCard />
+            {/* 3 — Breakdown */}
             <BreakdownCard />
-            <FollowingCard copying={copying} />
+            {/* 5 — Following (pushed after CopiedTrades on mobile via order) */}
+            <div className="order-[5] lg:order-none"><FollowingCard copying={copying} /></div>
           </div>
+
+          {/* 4 — CopiedTrades */}
+          <div className="order-[4] lg:order-none"><CopiedTradesCard trades={trades} /></div>
         </div>
       </main>
     </div>
@@ -325,11 +336,10 @@ function EditProfileModal({ onClose }: { onClose: () => void }) {
 
 interface DashStats {
   balance:             number;
-  profit:              number;
-  portfolio:           number;
-  invested_value:      number;
+  roi:                 number;  // absolute profit in USD
+  portfolio:           number;  // balance + roi
   last_month_deposits: number;
-  pct_change:          number;
+  pct_change:          number;  // percentage_roi from user model
 }
 
 function fmt(n: number) {
@@ -355,8 +365,7 @@ function PortfolioCard() {
 
   const portfolio = stats ? fmt(stats.portfolio) : "0.00";
   const balance   = stats ? fmt(stats.balance)   : "0.00";
-  const invested  = stats ? fmt(stats.invested_value) : "0.00";
-  const profit    = stats ? fmt(stats.profit)    : "0.00";
+  const profit    = stats ? fmt(stats.roi)       : "0.00";
   const lastMonth = stats ? fmt(stats.last_month_deposits) : "0.00";
   const pct       = stats ? stats.pct_change : 0;
   const pctLabel  = pct >= 0 ? `+${pct.toFixed(1)}%` : `${pct.toFixed(1)}%`;
@@ -382,7 +391,7 @@ function PortfolioCard() {
           </div>
 
           {/* Balance + wallet */}
-          <div className="flex items-start justify-between gap-2">
+          <div className="relative flex items-start gap-2">
             <div className="flex-1 min-w-0">
               {/* Amount */}
               <div className="flex items-baseline gap-2 flex-wrap mb-1">
@@ -402,20 +411,20 @@ function PortfolioCard() {
               <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-0">
                 <StatBox label="Available Balance" value={`$${balance}`} />
                 <div className="hidden sm:block w-px self-stretch bg-[#c4c1b4] dark:bg-[#1e3827] mx-5" />
-                <StatBox label="Invested Value" value={`$${invested}`} />
+                <StatBox label="Invested Value" value={`$${balance}`} />
                 <div className="hidden sm:block w-px self-stretch bg-[#c4c1b4] dark:bg-[#1e3827] mx-5" />
                 <StatBox label="Profit" value={`$${profit}`} />
               </div>
             </div>
 
-            {/* Wallet — visible on all screen sizes */}
-            <div className="shrink-0 pointer-events-none select-none self-center">
+            {/* Wallet — absolutely positioned, does not affect flow */}
+            <div className="absolute right-0 top-10 md:top-0 pointer-events-none select-none">
               <Image
                 src="/wallet-dynamic-premium.png"
                 alt=""
                 width={152}
                 height={134}
-                className="object-contain w-[90px] sm:w-[110px] lg:w-[152px]"
+                className="object-contain w-[140px] sm:w-[130px] lg:w-[152px]"
               />
             </div>
           </div>
@@ -448,14 +457,14 @@ function PortfolioCard() {
             </button>
           </div>
 
-          {/* Desktop: Account Quick Actions label on left, buttons on right */}
+          {/* Desktop: Balance Quick Actions label on left, buttons on right */}
           <div className="hidden sm:flex items-center gap-3">
             <div className="flex items-center gap-2.5 mr-auto">
               <div className="w-9 h-9 rounded-full bg-[#1a1a1a] dark:bg-[#111] flex items-center justify-center text-white shrink-0">
                 <FlashIcon />
               </div>
               <span className="text-[13px] font-medium text-[#333333] dark:text-[#8fa896]">
-                Account Quick Actions
+                Balance Quick Actions
               </span>
             </div>
             <button
@@ -1006,28 +1015,64 @@ function WithdrawModal({ onClose }: { onClose: () => void }) {
    COPIED TRADES CARD
 ════════════════════════════════════════════════════════════════ */
 
+function TradeAssetIcon({ asset }: { asset: string }) {
+  const meta   = getAssetMeta(asset);
+  const initials = asset.replace("/", "").slice(0, 3).toUpperCase();
+
+  if (meta.icon) {
+    return (
+      <div
+        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
+        style={{ backgroundColor: meta.color }}
+      >
+        <Image
+          src={meta.icon}
+          alt={asset}
+          width={28}
+          height={28}
+          className="object-contain"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 select-none"
+      style={{ backgroundColor: meta.color, color: meta.textColor }}
+    >
+      {initials}
+    </div>
+  );
+}
+
 function CopiedTradesCard({ trades }: { trades: CopyTrade[] }) {
   const statusCls = (s: string) =>
     s === "open"    ? "bg-[#dcfce7] text-[#16a34a] dark:bg-[#082a12] dark:text-[#4ade80]" :
     s === "pending" ? "bg-[#fef3c7] text-[#d97706] dark:bg-[#2a1f08] dark:text-[#fbbf24]" :
                       "bg-[#f0f0ec] text-[#555555] dark:bg-[#1a2a1e] dark:text-[#8fa896]";
 
+  const dirCls = (d: string) =>
+    d === "Buy"
+      ? "bg-[#dcfce7] text-[#16a34a] dark:bg-[#082a12] dark:text-[#4ade80]"
+      : "bg-[#fee2e2] text-[#dc2626] dark:bg-[#2a0808] dark:text-[#f87171]";
+
+  const pnlCls = (pos: boolean) =>
+    pos ? "text-[#16a34a] dark:text-[#22c55e]" : "text-[#dc2626] dark:text-[#f87171]";
+
+  const typeLbl: Record<string, string> = { stock: "Stock", crypto: "Crypto", forex: "Forex" };
+
+  const DURATION_LABELS: Record<string, string> = {
+    "2m": "2 min", "5m": "5 min", "10m": "10 min", "15m": "15 min", "30m": "30 min",
+    "1h": "1 hr", "2h": "2 hr", "4h": "4 hr", "6h": "6 hr", "12h": "12 hr",
+    "1d": "1 day", "3d": "3 days", "1w": "1 week",
+  };
+
   return (
     <div className="bg-white dark:bg-[#0e1e14] border border-[#e5e5e5] dark:border-[#1e3827] overflow-hidden">
-      <div className="px-5 pt-5 pb-2">
-        <h2 className="text-[16px] font-bold text-[#001011] dark:text-white mb-4">
-          Trade Copied
-        </h2>
-
-        {/* Table header */}
-        <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr] text-[11px] font-medium text-[#999999] dark:text-[#4a6655] uppercase tracking-wide pb-3 border-b border-[#f0f0ec] dark:border-[#1a2e1e]">
-          <span>Asset</span>
-          <span>Type</span>
-          <span>Direction</span>
-          <span>Price</span>
-          <span>PNL</span>
-          <span>Status</span>
-        </div>
+      <div className="px-5 pt-5 pb-3">
+        <h2 className="text-[16px] font-bold text-[#001011] dark:text-white">Trade Copied</h2>
       </div>
 
       {trades.length === 0 ? (
@@ -1054,56 +1099,114 @@ function CopiedTradesCard({ trades }: { trades: CopyTrade[] }) {
         </div>
       ) : (
         <>
-          {/* ── Desktop rows (sm+) ── */}
-          <div className="hidden sm:block divide-y divide-[#f5f5f0] dark:divide-[#1a2e1e]">
+          {/* ── Mobile cards (< sm) ── */}
+          <div className="sm:hidden flex flex-col gap-3 px-4 pb-4">
             {trades.map((t) => (
-              <div
-                key={t.id}
-                className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr] items-center px-5 py-3.5 hover:bg-[#fafaf7] dark:hover:bg-[#112018] transition-colors"
-              >
-                <div>
-                  <span className="text-[13px] font-semibold text-[#001011] dark:text-white">{t.asset}</span>
-                  <p className="text-[10px] text-[#aaaaaa] dark:text-[#4a6655]">{t.trader_name}</p>
+              <div key={t.id} className="border border-[#e5e5e5] dark:border-[#1e3827] overflow-hidden">
+                {/* Asset row + status */}
+                <div className="flex items-center justify-between px-4 pt-4 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <TradeAssetIcon asset={t.asset} />
+                    <div>
+                      <p className="text-[14px] font-bold text-[#001011] dark:text-white leading-tight">{t.asset}</p>
+                      <p className="text-[11px] text-[#aaaaaa] dark:text-[#4a6655]">
+                        {typeLbl[t.asset_type] ?? t.asset_type} · {DURATION_LABELS[t.duration] ?? t.duration}
+                      </p>
+                    </div>
+                  </div>
+                  <span className={`text-[11px] font-semibold px-2.5 py-0.5 capitalize ${statusCls(t.status)}`}>
+                    {t.status.charAt(0).toUpperCase() + t.status.slice(1)}
+                  </span>
                 </div>
-                <span className="text-[13px] text-[#555555] dark:text-[#8fa896]">{t.trade_type}</span>
-                <span className={`text-[13px] font-semibold ${t.direction === "Long" ? "text-[#16a34a] dark:text-[#22c55e]" : "text-[#dc2626] dark:text-[#f87171]"}`}>
-                  {t.direction}
-                </span>
-                <span className="text-[13px] text-[#001011] dark:text-white">${Number(t.price).toLocaleString()}</span>
-                <span className={`text-[13px] font-semibold ${t.pnl_positive ? "text-[#16a34a] dark:text-[#22c55e]" : "text-[#dc2626] dark:text-[#f87171]"}`}>
-                  {t.pnl_display}
-                </span>
-                <span className={`inline-flex w-fit px-2 py-0.5 text-[11px] font-semibold capitalize ${statusCls(t.status)}`}>
-                  {t.status}
-                </span>
+
+                {/* Divider */}
+                <div className="border-t border-[#f0f0ec] dark:border-[#1a2e1e]" />
+
+                {/* Labels */}
+                <div className="grid grid-cols-3 px-4 pt-3 pb-1 gap-2">
+                  {["DIRECTION", "ENTRY", "EARNING"].map((lbl) => (
+                    <span key={lbl} className="text-[10px] font-medium text-[#999999] dark:text-[#4a6655] uppercase tracking-wide">
+                      {lbl}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Values */}
+                <div className="grid grid-cols-3 px-4 pb-3 gap-2 items-center">
+                  <span className={`text-[12px] font-bold px-2.5 py-0.5 w-fit ${dirCls(t.direction)}`}>
+                    {t.direction}
+                  </span>
+                  <span className="text-[13px] text-[#001011] dark:text-white">
+                    ${Number(t.entry).toLocaleString()}
+                  </span>
+                  <span className={`text-[13px] font-bold ${pnlCls(Number(t.earning_pct) >= 0)}`}>
+                    {Number(t.earning_pct) >= 0 ? "+" : ""}{Number(t.earning_pct).toFixed(2)}%
+                  </span>
+                </div>
+
+                {/* PNL footer */}
+                <div className="border-t border-[#f0f0ec] dark:border-[#1a2e1e]" />
+                <div className="flex items-center gap-2 px-4 py-3">
+                  <span className="text-[10px] font-medium text-[#999999] dark:text-[#4a6655] uppercase tracking-wide">PNL</span>
+                  <span className={`text-[14px] font-bold ${pnlCls(t.pnl_positive)}`}>{t.pnl_display}</span>
+                </div>
               </div>
             ))}
           </div>
 
-          {/* ── Mobile cards (< sm) ── */}
-          <div className="sm:hidden divide-y divide-[#f5f5f0] dark:divide-[#1a2e1e]">
-            {trades.map((t) => (
-              <div key={t.id} className="px-5 py-4">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[14px] font-bold text-[#001011] dark:text-white">{t.asset}</span>
-                  <span className={`px-2 py-0.5 text-[11px] font-semibold capitalize ${statusCls(t.status)}`}>{t.status}</span>
-                </div>
-                <p className="text-[10px] text-[#aaaaaa] dark:text-[#4a6655] mb-2">{t.trader_name}</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { label: "Type",      val: t.trade_type,  cls: "text-[#555555] dark:text-[#8fa896]" },
-                    { label: "Direction", val: t.direction,   cls: t.direction === "Long" ? "text-[#16a34a] dark:text-[#22c55e] font-semibold" : "text-[#dc2626] dark:text-[#f87171] font-semibold" },
-                    { label: "Price",     val: `$${Number(t.price).toLocaleString()}`, cls: "text-[#001011] dark:text-white" },
-                    { label: "PNL",       val: t.pnl_display, cls: t.pnl_positive ? "text-[#16a34a] dark:text-[#22c55e] font-semibold" : "text-[#dc2626] dark:text-[#f87171] font-semibold" },
-                  ].map(({ label, val, cls }) => (
-                    <div key={label}>
-                      <p className="text-[10px] text-[#aaaaaa] dark:text-[#4a6655] uppercase tracking-wide mb-0.5">{label}</p>
-                      <p className={`text-[12px] ${cls}`}>{val}</p>
-                    </div>
+          {/* ── Desktop scrollable table (sm+) ── */}
+          <div className="hidden sm:block overflow-x-auto">
+            <table className="w-full min-w-[640px] border-collapse">
+              <thead>
+                <tr className="border-b border-[#f0f0ec] dark:border-[#1a2e1e]">
+                  {["Asset", "Type", "Direction", "Entry", "Earning %", "P&L", "Duration", "Status"].map((h) => (
+                    <th key={h} className="px-4 py-3 text-left text-[11px] font-medium text-[#999999] dark:text-[#4a6655] uppercase tracking-wide whitespace-nowrap">
+                      {h}
+                    </th>
                   ))}
-                </div>
-              </div>
-            ))}
+                </tr>
+              </thead>
+              <tbody>
+                {trades.map((t) => (
+                  <tr
+                    key={t.id}
+                    className="border-b border-[#f5f5f0] dark:border-[#1a2e1e] hover:bg-[#fafaf7] dark:hover:bg-[#112018] transition-colors"
+                  >
+                    <td className="px-4 py-3.5">
+                      <div className="flex items-center gap-2.5">
+                        <TradeAssetIcon asset={t.asset} />
+                        <p className="text-[13px] font-semibold text-[#001011] dark:text-white">{t.asset}</p>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5 text-[12px] text-[#555555] dark:text-[#8fa896] capitalize">
+                      {typeLbl[t.asset_type] ?? t.asset_type}
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <span className={`text-[12px] font-bold px-2.5 py-1 ${dirCls(t.direction)}`}>
+                        {t.direction}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-[13px] text-[#001011] dark:text-white whitespace-nowrap">
+                      ${Number(t.entry).toLocaleString()}
+                    </td>
+                    <td className={`px-4 py-3.5 text-[13px] font-semibold whitespace-nowrap ${pnlCls(Number(t.earning_pct) >= 0)}`}>
+                      {Number(t.earning_pct) >= 0 ? "+" : ""}{Number(t.earning_pct).toFixed(2)}%
+                    </td>
+                    <td className={`px-4 py-3.5 text-[13px] font-semibold whitespace-nowrap ${pnlCls(t.pnl_positive)}`}>
+                      {t.pnl_display}
+                    </td>
+                    <td className="px-4 py-3.5 text-[12px] text-[#555555] dark:text-[#8fa896] whitespace-nowrap">
+                      {DURATION_LABELS[t.duration] ?? t.duration}
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <span className={`inline-flex px-2.5 py-0.5 text-[11px] font-semibold capitalize ${statusCls(t.status)}`}>
+                        {t.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </>
       )}

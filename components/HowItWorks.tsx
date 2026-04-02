@@ -156,6 +156,8 @@ function TrendArrow() {
   );
 }
 
+import { FadeUp, Stagger, StaggerItem } from "@/components/ScrollReveal";
+
 /* ── Main section ───────────────────────────────────────────────── */
 const steps = [
   {
@@ -186,7 +188,7 @@ export default function HowItWorks() {
       <div className="max-w-[1440px] mx-auto">
 
         {/* ── Header — centered ── */}
-        <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
+        <FadeUp className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
           <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#001011] dark:text-white leading-tight">
             How it works
           </h2>
@@ -194,12 +196,12 @@ export default function HowItWorks() {
             Getting started with copy trading is simple. Follow these four easy steps
             to begin your investment journey today.
           </p>
-        </div>
+        </FadeUp>
 
         {/* ── Cards row ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-[#e8ead8] dark:border-[#1e3827]">
+        <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-[#e8ead8] dark:border-[#1e3827]">
           {steps.map((step, i) => (
-            <div
+            <StaggerItem
               key={i}
               className={[
                 "px-6 lg:px-8 pt-8 pb-10 flex flex-col gap-6",
@@ -216,7 +218,7 @@ export default function HowItWorks() {
                 .join(" ")}
             >
               {step.illustration}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 items-center text-center sm:items-start sm:text-left">
                 <h3 className="text-[18px] sm:text-[20px] font-extrabold text-[#033F2D] dark:text-[#B0D45A] leading-snug">
                   {step.title}
                 </h3>
@@ -224,9 +226,9 @@ export default function HowItWorks() {
                   {step.description}
                 </p>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
 
       </div>
     </section>

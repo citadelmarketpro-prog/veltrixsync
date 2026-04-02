@@ -29,7 +29,7 @@ const NAV_ITEMS = [
   { href: "/dashboard",    label: "Dashboard",       icon: <HomeIcon /> },
   { href: "/traders",      label: "Explore traders", icon: <GridIcon /> },
   { href: "/stocks",       label: "Stocks",          icon: <CandlestickIcon /> },
-  { href: "/my-portfolio", label: "My portfolio",    icon: <ChartLineIcon /> },
+  { href: "/my-portfolio", label: "Live Trading",    icon: <ChartLineIcon /> },
   { href: "/transactions", label: "Transactions",    icon: <BarChartIcon /> },
   { href: "/news",         label: "News",            icon: <NewsIcon /> },
 ];
@@ -91,8 +91,8 @@ export default function DashNav() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0">
-            <span className="font-bold text-[16px] sm:text-[18px] text-[#001011] dark:text-white leading-none">Veltrix</span>
-            <span className="font-bold text-[16px] sm:text-[18px] text-[#B0D45A] leading-none">sync</span>
+            <span className="font-bold text-[20px] sm:text-[22px] text-[#001011] dark:text-white leading-none">Veltrix</span>
+            <span className="font-bold text-[20px] sm:text-[22px] text-[#B0D45A] leading-none">sync</span>
           </Link>
 
           {/* Desktop nav — flex-1 so it sits between logo and actions without overlapping */}
@@ -164,7 +164,7 @@ export default function DashNav() {
             <div className="relative">
               <button
                 onClick={() => { setShowProfile((v) => !v); setShowNotif(false); }}
-                className="hidden sm:flex items-center gap-2 h-8 pl-1 pr-2.5 border border-[#e5e5e5] dark:border-[#1e3827] hover:bg-[#f5f5f5] dark:hover:bg-[#132b1a] transition-colors"
+                className="flex items-center gap-2 h-8 pl-1 pr-2.5 sm:border sm:border-[#e5e5e5] sm:dark:border-[#1e3827] hover:bg-[#f5f5f5] dark:hover:bg-[#132b1a] transition-colors"
               >
                 {user?.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -177,10 +177,10 @@ export default function DashNav() {
                     {initials}
                   </div>
                 )}
-                <span className="text-[13px] font-medium text-[#001011] dark:text-white whitespace-nowrap">
+                <span className="hidden sm:inline text-[13px] font-medium text-[#001011] dark:text-white whitespace-nowrap">
                   Hey, {user?.first_name || user?.username || "…"}
                 </span>
-                <span className="text-[#888888] dark:text-[#4a6655]"><ChevronDownIcon /></span>
+                <span className="hidden sm:inline text-[#888888] dark:text-[#4a6655]"><ChevronDownIcon /></span>
               </button>
               {showProfile && (
                 <>
@@ -234,26 +234,6 @@ export default function DashNav() {
               </Link>
             ))}
 
-            {/* Mobile user row */}
-            <div
-              className="flex items-center gap-3 px-5 py-4 border-t border-[#e5e5e5] dark:border-[#1e3827] cursor-pointer hover:bg-[#f5f5f5] dark:hover:bg-[#0e1e14] transition-colors"
-              onClick={() => { setMenuOpen(false); setShowProfile(true); }}
-            >
-              {user?.avatar_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.avatar_url} alt={displayName} className="w-7 h-7 rounded-full object-cover shrink-0" />
-              ) : (
-                <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold text-[#001011] shrink-0"
-                  style={{ backgroundColor: "#C1E963" }}
-                >
-                  {initials}
-                </div>
-              )}
-              <span className="text-[13px] font-medium text-[#001011] dark:text-white">
-                Hey, {user?.first_name || user?.username || "…"}
-              </span>
-            </div>
           </div>
         </>
       )}

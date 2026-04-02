@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FadeUp, Stagger, StaggerItem } from "@/components/ScrollReveal";
 
 const steps = [
   {
@@ -26,16 +27,16 @@ export default function ReadyToInvest() {
       <div className="max-w-[1440px] mx-auto">
 
         {/* ── Centered heading ── */}
-        <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16 border-t border-[#e8ead8] dark:border-[#1e3827]">
+        <FadeUp className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16 border-t border-[#e8ead8] dark:border-[#1e3827]">
           <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#033F2D] dark:text-white leading-tight">
             Ready to Invest Smarter?
           </h2>
-        </div>
+        </FadeUp>
 
         {/* ── 3 step cards ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 px-6 lg:px-[72px]">
+        <Stagger className="grid grid-cols-1 sm:grid-cols-3 gap-4 px-6 lg:px-[72px]">
           {steps.map((step, i) => (
-            <div
+            <StaggerItem
               key={i}
               className="flex flex-col items-center text-center px-8 py-12 lg:py-16 bg-[#eaeadf] dark:bg-[#0d1f14]"
             >
@@ -48,12 +49,12 @@ export default function ReadyToInvest() {
               <p className="text-[14px] lg:text-[15px] leading-[1.75] text-[#445544] dark:text-[#8fa896]">
                 {step.description}
               </p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
 
         {/* ── CTA button ── */}
-        <div className="flex justify-center px-6 pt-12 pb-14 lg:pt-14 lg:pb-20">
+        <FadeUp delay={0.2} className="flex justify-center px-6 pt-12 pb-14 lg:pt-14 lg:pb-20">
           <Link
             href="/sign-up"
             className="inline-flex items-center gap-2 h-12 px-8 text-[14px] font-bold text-[#001011] transition-opacity hover:opacity-90"
@@ -61,7 +62,7 @@ export default function ReadyToInvest() {
           >
             Get started now →
           </Link>
-        </div>
+        </FadeUp>
 
       </div>
     </section>

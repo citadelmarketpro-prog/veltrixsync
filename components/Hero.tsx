@@ -111,7 +111,7 @@ export default function Hero() {
       {/* ════════════════════════════════════════════════════════
           HERO SECTION
       ════════════════════════════════════════════════════════ */}
-      <section className="relative w-full overflow-hidden bg-white dark:bg-[#0b1c11] min-h-[calc(100vh-80px)] flex flex-col justify-between">
+      <section className="relative w-full overflow-hidden bg-white dark:bg-[#0b1c11] flex flex-col justify-between">
 
         {/* ── Particle canvas ── */}
         <ParticlesBackground />
@@ -126,6 +126,17 @@ export default function Hero() {
             background: "radial-gradient(ellipse at center, rgba(176,212,90,0.07) 0%, transparent 70%)",
             filter: "blur(40px)",
           }}
+        />
+
+        {/* ── Bottom fade — covers particles below the video, light mode ── */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none z-[5] dark:hidden"
+          style={{ background: "linear-gradient(to top, #ffffff 30%, transparent 100%)" }}
+        />
+        {/* ── Bottom fade — covers particles below the video, dark mode ── */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none z-[5] hidden dark:block"
+          style={{ background: "linear-gradient(to top, #0b1c11 30%, transparent 100%)" }}
         />
 
         {/* ── Lime top-edge gradient ── */}
@@ -180,16 +191,18 @@ export default function Hero() {
 
         {/* ── Video / trader network visual ── */}
         <div className="relative z-10 w-full flex flex-col items-center mt-4 sm:mt-8 lg:mt-10 px-5 lg:px-0">
-          <div className="w-full max-w-75 sm:max-w-100 lg:max-w-125 mx-auto">
+          <div className="relative w-full max-w-75 sm:max-w-100 lg:max-w-125 mx-auto">
             <video
               src="/images/banner-video-light.mp4"
               autoPlay muted loop playsInline
               className="w-full dark:hidden"
+              style={{ filter: "hue-rotate(50deg) saturate(1.15)" }}
             />
             <video
               src="/images/banner-video-dark.mp4"
               autoPlay muted loop playsInline
               className="w-full hidden dark:block"
+              style={{ filter: "hue-rotate(50deg) saturate(1.15)" }}
             />
           </div>
 

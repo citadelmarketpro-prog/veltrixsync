@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DashNav from "@/components/DashNav";
 import { api, ApiError } from "@/lib/api";
@@ -98,10 +98,13 @@ export default function KycPage() {
   }
 
   // ── Guard: redirect away if KYC already submitted ────────────────────────
-  if (user && user.kyc_status !== "not_submitted") {
-    router.replace("/dashboard");
-    return null;
-  }
+  useEffect(() => {
+    if (user && user.kyc_status !== "not_submitted") {
+      router.replace("/dashboard");
+    }
+  }, [user, router]);
+
+  if (user && user.kyc_status !== "not_submitted") return null;
 
   // ── Validation per step ──────────────────────────────────────────────────
 
@@ -179,43 +182,52 @@ export default function KycPage() {
         className="relative overflow-hidden px-6 py-10 md:py-14"
         style={{ backgroundColor: "#B0D45A" }}
       >
-        <div className="max-w-[1100px] mx-auto flex items-center justify-between gap-8">
+        <div className="max-w-275 mx-auto flex items-center justify-between gap-8">
           {/* Text */}
           <div>
             <h1 className="text-[28px] md:text-[36px] font-black text-[#001011] leading-tight mb-2">
               Complete Your Profile
             </h1>
-            <p className="text-[14px] text-[#2a3a10] max-w-[420px] leading-relaxed">
+            <p className="text-[14px] text-[#2a3a10] max-w-105 leading-relaxed">
               Help us keep your account secure and personalized by providing your
               information below.
             </p>
           </div>
 
           {/* Decorative avatars + stats */}
-          <div className="hidden md:flex items-end gap-0 relative shrink-0">
-            <div className="relative">
-              {/* Waveform SVG */}
-              <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 300 100" preserveAspectRatio="none">
-                <polyline points="0,60 30,40 60,70 90,30 120,55 150,25 180,50 210,35 240,60 270,20 300,45"
-                  fill="none" stroke="#001011" strokeWidth="1.5" />
-              </svg>
-              {/* Avatars */}
-              <div className="flex items-end gap-3 relative z-10">
-                <div className="w-14 h-14 rounded-full bg-[#001011]/20 border-2 border-white/60 overflow-hidden flex items-center justify-center text-[20px]">👩</div>
-                <div className="w-16 h-16 rounded-full bg-[#001011]/20 border-2 border-white/60 overflow-hidden flex items-center justify-center text-[22px] mb-1">👨</div>
-                <div className="w-14 h-14 rounded-full bg-[#001011]/20 border-2 border-white/60 overflow-hidden flex items-center justify-center text-[20px]">👨‍💼</div>
+          <div className="hidden md:flex items-center gap-6 relative shrink-0">
+            {/* Overlapping avatars */}
+            <div className="flex items-center">
+              <div className="w-14 h-14 rounded-full border-[3px] border-[#B0D45A] overflow-hidden shadow-lg z-30">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/avatar_1.png" alt="Trader" className="w-full h-full object-cover" />
+              </div>
+              <div className="w-16 h-16 rounded-full border-[3px] border-[#B0D45A] overflow-hidden shadow-lg -ml-4 z-20">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/avatar_2.png" alt="Trader" className="w-full h-full object-cover" />
+              </div>
+              <div className="w-14 h-14 rounded-full border-[3px] border-[#B0D45A] overflow-hidden shadow-lg -ml-4 z-10">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/avatar_3.png" alt="Trader" className="w-full h-full object-cover" />
               </div>
             </div>
-            {/* Stats */}
-            <div className="ml-6 text-right leading-tight">
-              <p className="text-[13px] font-semibold text-[#3a5010]">31.18% ↗</p>
-              <p className="text-[22px] font-black text-[#001011]">24.96%</p>
+            {/* Stats card */}
+            <div className="bg-[#001011]/20 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/20">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <polyline points="1,9 4,5 7,7 11,2" stroke="#001011" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <polyline points="8,2 11,2 11,5" stroke="#001011" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <p className="text-[12px] font-semibold text-[#001011]/80">Verified users</p>
+              </div>
+              <p className="text-[28px] font-black text-[#001011] leading-none">118K+</p>
+              <p className="text-[11px] text-[#001011]/60 mt-0.5">Trusted globally</p>
             </div>
           </div>
         </div>
 
         {/* Step progress pills */}
-        <div className="max-w-[1100px] mx-auto mt-6 flex items-center gap-2">
+        <div className="max-w-275 mx-auto mt-6 flex items-center gap-2">
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center gap-2">
               <div
@@ -239,7 +251,7 @@ export default function KycPage() {
       </div>
 
       {/* ── Body ── */}
-      <div className="max-w-[1100px] mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+      <div className="max-w-275 mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
 
         {/* Form card */}
         <div className="bg-white dark:bg-[#0e1e14] shadow-sm">
@@ -378,14 +390,18 @@ function Step2({ form, set }: { form: KycForm; set: (k: keyof KycForm, v: string
           <button
             type="button"
             onClick={() => frontRef.current?.click()}
-            className="flex flex-col items-center justify-center h-[80px] border-2 border-dashed border-[#d4d4d4] dark:border-[#2a4a34] bg-[#fafaf7] dark:bg-[#0b1c11] hover:border-[#B0D45A] hover:bg-[#f5fce8] dark:hover:bg-[#0e2016] transition-colors gap-1"
+            className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-[#d4d4d4] dark:border-[#2a4a34] bg-[#fafaf7] dark:bg-[#0b1c11] hover:border-[#B0D45A] hover:bg-[#f5fce8] dark:hover:bg-[#0e2016] transition-all gap-1.5 rounded-sm"
           >
             {form.id_front ? (
-              <span className="text-[12px] font-medium text-[#22c55e] text-center px-2 truncate w-full">{form.id_front.name}</span>
+              <>
+                <span className="w-8 h-8 rounded-full bg-[#dcfce7] dark:bg-[#0e2a18] flex items-center justify-center text-[#16a34a] text-[16px]">✓</span>
+                <span className="text-[11px] font-medium text-[#16a34a] text-center px-2 truncate w-full">{form.id_front.name}</span>
+              </>
             ) : (
               <>
                 <UploadIcon />
-                <span className="text-[12px] font-semibold text-[#555555] dark:text-[#8fa896]">Front ID</span>
+                <span className="text-[12px] font-semibold text-[#555555] dark:text-[#8fa896]">Front of ID</span>
+                <span className="text-[10px] text-[#aaaaaa] dark:text-[#3a5040]">JPG, PNG or PDF</span>
               </>
             )}
           </button>
@@ -396,14 +412,18 @@ function Step2({ form, set }: { form: KycForm; set: (k: keyof KycForm, v: string
           <button
             type="button"
             onClick={() => backRef.current?.click()}
-            className="flex flex-col items-center justify-center h-[80px] border-2 border-dashed border-[#d4d4d4] dark:border-[#2a4a34] bg-[#fafaf7] dark:bg-[#0b1c11] hover:border-[#B0D45A] hover:bg-[#f5fce8] dark:hover:bg-[#0e2016] transition-colors gap-1"
+            className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-[#d4d4d4] dark:border-[#2a4a34] bg-[#fafaf7] dark:bg-[#0b1c11] hover:border-[#B0D45A] hover:bg-[#f5fce8] dark:hover:bg-[#0e2016] transition-all gap-1.5 rounded-sm"
           >
             {form.id_back ? (
-              <span className="text-[12px] font-medium text-[#22c55e] text-center px-2 truncate w-full">{form.id_back.name}</span>
+              <>
+                <span className="w-8 h-8 rounded-full bg-[#dcfce7] dark:bg-[#0e2a18] flex items-center justify-center text-[#16a34a] text-[16px]">✓</span>
+                <span className="text-[11px] font-medium text-[#16a34a] text-center px-2 truncate w-full">{form.id_back.name}</span>
+              </>
             ) : (
               <>
                 <UploadIcon />
-                <span className="text-[12px] font-semibold text-[#555555] dark:text-[#8fa896]">Back ID</span>
+                <span className="text-[12px] font-semibold text-[#555555] dark:text-[#8fa896]">Back of ID</span>
+                <span className="text-[10px] text-[#aaaaaa] dark:text-[#3a5040]">JPG, PNG or PDF</span>
               </>
             )}
           </button>
@@ -457,12 +477,11 @@ function Step3({ form, set }: { form: KycForm; set: (k: keyof KycForm, v: string
 function FieldRow({ num, label, children }: { num: number; label: string; children: React.ReactNode }) {
   return (
     <div className="flex gap-4 items-start">
-      {/* Circle number */}
-      <div className="w-8 h-8 rounded-full bg-[#ebebea] dark:bg-[#1a2e1e] flex items-center justify-center text-[13px] font-semibold text-[#555555] dark:text-[#8fa896] shrink-0 mt-6">
+      <div className="w-7 h-7 rounded-full bg-[#B0D45A]/20 dark:bg-[#1a3020] border border-[#B0D45A]/40 dark:border-[#2a4a20] flex items-center justify-center text-[11px] font-bold text-[#4a6510] dark:text-[#B0D45A] shrink-0 mt-[30px]">
         {num}
       </div>
       <div className="flex-1">
-        <label className="block text-[13px] font-medium text-[#001011] dark:text-white mb-2">
+        <label className="block text-[13px] font-semibold text-[#001011] dark:text-[#d0e8d0] mb-2">
           {label}
         </label>
         {children}
@@ -488,7 +507,7 @@ function KycInput({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full h-12 px-4 bg-[#f5f5f0] dark:bg-[#0b1c11] border border-transparent focus:border-[#B0D45A] text-[14px] text-[#001011] dark:text-white placeholder-[#aaaaaa] dark:placeholder-[#4a6655] outline-none transition-colors"
+      className="w-full h-12 px-4 bg-[#f8f8f4] dark:bg-[#0b1c11] border border-[#e5e5e0] dark:border-[#1e3827] focus:border-[#B0D45A] focus:bg-white dark:focus:bg-[#0e1e14] text-[14px] text-[#001011] dark:text-white placeholder-[#bbbbbb] dark:placeholder-[#3a5040] outline-none transition-all"
     />
   );
 }
@@ -509,7 +528,7 @@ function KycSelect({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-12 px-4 pr-10 bg-[#f5f5f0] dark:bg-[#0b1c11] border border-transparent focus:border-[#B0D45A] text-[14px] text-[#001011] dark:text-white outline-none appearance-none transition-colors cursor-pointer"
+        className="w-full h-12 px-4 pr-10 bg-[#f8f8f4] dark:bg-[#0b1c11] border border-[#e5e5e0] dark:border-[#1e3827] focus:border-[#B0D45A] focus:bg-white dark:focus:bg-[#0e1e14] text-[14px] text-[#001011] dark:text-white outline-none appearance-none transition-all cursor-pointer"
       >
         <option value="" disabled>{placeholder}</option>
         {options.map((o) => (
@@ -525,35 +544,73 @@ function KycSelect({
 
 // ─── Privacy sidebar ─────────────────────────────────────────────────────────
 
+const SECURITY_ITEMS = [
+  {
+    icon: "/icons/lock.svg",
+    title: "SSL Encrypted",
+    desc: "256-bit bank-grade encryption on all data",
+  },
+  {
+    icon: "/icons/security-user.svg",
+    title: "Identity Protected",
+    desc: "Your documents are never shared with third parties",
+  },
+  {
+    icon: "/icons/global.svg",
+    title: "GDPR Compliant",
+    desc: "Full compliance with global privacy regulations",
+  },
+  {
+    icon: "/icons/24-support.svg",
+    title: "24/7 Support",
+    desc: "Our team is available around the clock to help",
+  },
+];
+
 function PrivacySidebar() {
   return (
-    <div className="lg:sticky lg:top-[72px] self-start bg-white dark:bg-[#0e1e14] shadow-sm p-6">
-      <h3 className="text-[16px] font-bold text-[#001011] dark:text-white mb-3">
-        Privacy &amp; Security
-      </h3>
-      <p className="text-[13px] text-[#555555] dark:text-[#8fa896] leading-relaxed mb-5">
-        Your personal information is protected with bank-level encryption. We never
-        share your data with third parties without your explicit consent.
-      </p>
-      <ul className="flex flex-col gap-2.5 mb-6">
-        {[
-          "SSL encrypted connection",
-          "Two-factor authentication",
-          "Regular security audits",
-          "GDPR compliant",
-        ].map((item) => (
-          <li key={item} className="flex items-center gap-2 text-[13px] text-[#333333] dark:text-[#c0d4c8]">
-            <span className="text-[#B0D45A] font-bold">✓</span>
-            {item}
-          </li>
-        ))}
-      </ul>
-      <p className="text-[12px] text-[#888888] dark:text-[#4a6655] leading-relaxed">
-        By submitting this form, you agree to our{" "}
-        <span className="text-[#033F2D] dark:text-[#B0D45A] underline cursor-pointer">Terms of Service</span>
-        {" "}and{" "}
-        <span className="text-[#033F2D] dark:text-[#B0D45A] underline cursor-pointer">Privacy Policy</span>.
-      </p>
+    <div className="lg:sticky lg:top-18 self-start space-y-4">
+      {/* Main security card */}
+      <div className="bg-white dark:bg-[#0e1e14] border border-[#e5e5e5] dark:border-[#1e3827] p-6">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-4 pb-4 border-b border-[#f0f0ec] dark:border-[#1e3827]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <div className="w-10 h-10 rounded-xl bg-[#f5fce8] dark:bg-[#0e2016] flex items-center justify-center shrink-0">
+            <img src="/icons/lock-guard.png" alt="" className="w-5 h-5 object-contain" />
+          </div>
+          <div>
+            <h3 className="text-[14px] font-bold text-[#001011] dark:text-white leading-tight">
+              Privacy &amp; Security
+            </h3>
+            <p className="text-[11px] text-[#888888] dark:text-[#4a6655]">Bank-level protection</p>
+          </div>
+        </div>
+
+        <ul className="flex flex-col gap-4">
+          {SECURITY_ITEMS.map((item) => (
+            <li key={item.title} className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#f5fce8] dark:bg-[#0e2016] flex items-center justify-center shrink-0 mt-0.5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={item.icon} alt="" className="w-4 h-4 object-contain" style={{ filter: "invert(58%) sepia(47%) saturate(498%) hue-rotate(38deg) brightness(95%)" }} />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold text-[#001011] dark:text-white leading-tight">{item.title}</p>
+                <p className="text-[11px] text-[#888888] dark:text-[#4a6655] leading-snug mt-0.5">{item.desc}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Terms note */}
+      <div className="bg-[#f5fce8] dark:bg-[#0e2016] border border-[#d4e8a0] dark:border-[#1e3827] p-4">
+        <p className="text-[12px] text-[#445520] dark:text-[#8fa896] leading-relaxed">
+          By submitting this form, you agree to our{" "}
+          <span className="text-[#033F2D] dark:text-[#B0D45A] underline cursor-pointer font-medium">Terms of Service</span>
+          {" "}and{" "}
+          <span className="text-[#033F2D] dark:text-[#B0D45A] underline cursor-pointer font-medium">Privacy Policy</span>.
+        </p>
+      </div>
     </div>
   );
 }

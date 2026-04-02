@@ -21,9 +21,8 @@ export interface AuthUser {
   avatar_url: string | null;
   bio: string;
   balance: string;
-  invested_value: string;
-  profit: string;
   roi: string;
+  percentage_roi: string;
   is_trader: boolean;
   trading_days: number;
   copiers_count: number;

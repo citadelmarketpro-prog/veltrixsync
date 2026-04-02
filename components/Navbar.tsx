@@ -17,10 +17,10 @@ export default function Navbar() {
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center shrink-0">
-          <span className="font-extrabold leading-none text-[22px] lg:text-[24px] text-[#001011] dark:text-white">
+          <span className="font-extrabold leading-none text-[20px] lg:text-[24px] text-[#001011] dark:text-white">
             Veltrix
           </span>
-          <span className="font-extrabold leading-none text-[22px] lg:text-[24px] text-[#B0D45A]">
+          <span className="font-extrabold leading-none text-[20px] lg:text-[24px] text-[#B0D45A]">
             sync
           </span>
         </Link>
@@ -63,7 +63,7 @@ export default function Navbar() {
           {/* Get Started */}
           <Link
             href="/sign-up"
-            className="md:inline-flex hidden items-center justify-center h-8 lg:h-[44px] px-3.5 lg:px-6 text-[12px] lg:text-[14px] font-bold transition-opacity hover:opacity-90"
+            className="inline-flex items-center justify-center h-8 lg:h-11 px-3.5 lg:px-6 text-[12px] lg:text-[14px] font-bold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#C1E963", color: "#001011" }}
           >
             Get Started

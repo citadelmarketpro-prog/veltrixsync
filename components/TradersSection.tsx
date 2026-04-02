@@ -1,6 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { FadeUp, FadeIn } from "@/components/ScrollReveal";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
 
@@ -23,17 +26,19 @@ function riskBadgeClass(risk: string) {
 }
 
 export default function TradersSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start", dragFree: true },
+    [Autoplay({ delay: 2800, stopOnInteraction: false, stopOnMouseEnter: true })]
+  );
 
-  const scroll = (dir: number) => {
-    scrollRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
-  };
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
     <section id="traders" className="w-full bg-white dark:bg-[#0b1c11]">
 
       {/* ── Header — centered ── */}
-      <div className="max-w-[1440px] mx-auto text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
+      <FadeUp className="max-w-[1440px] mx-auto text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
         <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#001011] dark:text-white leading-tight">
           Copy from the best traders
         </h2>
@@ -41,58 +46,62 @@ export default function TradersSection() {
           Our top-performing traders have consistently delivered exceptional
           results. Choose from a diverse range of trading strategies and risk profiles.
         </p>
-      </div>
+      </FadeUp>
 
-      {/* ── Carousel ── */}
-      <div className="border-t border-[#e8ead8] dark:border-[#1e3827] pt-8 pb-8 lg:pt-12 lg:pb-12">
+      {/* ── Embla Carousel ── */}
+      <FadeIn delay={0.15} className="border-t border-[#e8ead8] dark:border-[#1e3827] pt-8 pb-8 lg:pt-12 lg:pb-12">
         <div className="relative max-w-[1440px] mx-auto">
-          {/* Scroll area */}
-          <div
-            ref={scrollRef}
-            className="flex gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-6 lg:px-[72px] pb-1"
-          >
-            {traders.map((trader, i) => (
-              <TraderCard key={i} trader={trader} />
-            ))}
+
+          {/* Embla viewport */}
+          <div className="overflow-hidden px-6 lg:px-[72px]" ref={emblaRef}>
+            <div className="flex gap-4">
+              {traders.map((trader, i) => (
+                <div key={i} className="flex-[0_0_300px] min-w-0">
+                  <TraderCard trader={trader} />
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Left arrow */}
+          {/* Prev arrow */}
           <button
-            onClick={() => scroll(-1)}
-            className="hidden lg:flex absolute left-10 top-1/2 -translate-y-1/2 w-8 h-8 items-center justify-center bg-white dark:bg-[#132b1a] border border-[#e5e5e5] dark:border-[#1e3827] shadow text-[#555555] dark:text-[#8fa896] hover:text-[#001011] dark:hover:text-white transition-colors z-10"
+            onClick={scrollPrev}
+            className="hidden lg:flex absolute left-10 top-1/2 -translate-y-1/2 w-9 h-9 items-center justify-center bg-white dark:bg-[#132b1a] border border-[#e5e5e5] dark:border-[#1e3827] shadow-md text-[#555555] dark:text-[#8fa896] hover:text-[#001011] dark:hover:text-white transition-colors z-10"
+            aria-label="Previous"
           >
             <ChevronLeftIcon />
           </button>
 
-          {/* Right arrow */}
+          {/* Next arrow */}
           <button
-            onClick={() => scroll(1)}
-            className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 w-8 h-8 items-center justify-center bg-white dark:bg-[#132b1a] border border-[#e5e5e5] dark:border-[#1e3827] shadow text-[#555555] dark:text-[#8fa896] hover:text-[#001011] dark:hover:text-white transition-colors z-10"
+            onClick={scrollNext}
+            className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 w-9 h-9 items-center justify-center bg-white dark:bg-[#132b1a] border border-[#e5e5e5] dark:border-[#1e3827] shadow-md text-[#555555] dark:text-[#8fa896] hover:text-[#001011] dark:hover:text-white transition-colors z-10"
+            aria-label="Next"
           >
             <ChevronRightIcon />
           </button>
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── View all button ── */}
-      <div className="pb-10 lg:pb-14 flex justify-center px-6">
+      <FadeUp delay={0.1} className="pb-10 lg:pb-14 flex justify-center px-6">
         <Link href="/sign-up" className="inline-flex items-center gap-2 h-12 px-8 text-[14px] font-bold transition-opacity hover:opacity-80 border border-[#d8ead8] text-[#001011] dark:border-[#2a4a34] dark:text-white">
           View all expert traders
           <ArrowRightIcon />
         </Link>
-      </div>
+      </FadeUp>
 
     </section>
   );
 }
 
-/* ── Trader Card — styled like Rising Stars ───────────────────────── */
+/* ── Trader Card ─────────────────────────────────────────────────── */
 
 type Trader = (typeof traders)[number];
 
 function TraderCard({ trader }: { trader: Trader }) {
   return (
-    <div className="min-w-[300px] max-w-[300px] bg-white dark:bg-[#0e1e14] border border-[#e5e5e5] dark:border-[#1e3827] flex flex-col shrink-0 overflow-hidden">
+    <div className="bg-white dark:bg-[#0e1e14] border border-[#e5e5e5] dark:border-[#1e3827] flex flex-col overflow-hidden h-full">
 
       {/* Avatar + name + role */}
       <div className="flex items-center gap-3 px-4 pt-4 pb-3">
@@ -123,9 +132,7 @@ function TraderCard({ trader }: { trader: Trader }) {
             </span>
             <TrendingUp size={18} color="#22c55e" />
           </div>
-          <span className="text-[12px] text-[#888888] dark:text-[#4a6655] mt-1 block">
-            Profit (1M)
-          </span>
+          <span className="text-[12px] text-[#888888] dark:text-[#4a6655] mt-1 block">Profit (1M)</span>
         </div>
         <div className="text-right">
           <div className="flex items-center justify-end gap-1.5">
@@ -134,24 +141,20 @@ function TraderCard({ trader }: { trader: Trader }) {
             </span>
             <TrendingUp size={18} color="#22c55e" />
           </div>
-          <span className="text-[12px] text-[#888888] dark:text-[#4a6655] mt-1 block">
-            Copiers
-          </span>
+          <span className="text-[12px] text-[#888888] dark:text-[#4a6655] mt-1 block">Copiers</span>
         </div>
       </div>
 
       {/* Risk level */}
       <div className="flex items-center justify-between px-4 mb-3">
-        <span className="text-[13px] font-medium text-[#001011] dark:text-white">
-          Risk level:
-        </span>
+        <span className="text-[13px] font-medium text-[#001011] dark:text-white">Risk level:</span>
         <span className={`text-[12px] font-semibold px-3 py-1 rounded-full ${riskBadgeClass(trader.risk)}`}>
           {trader.risk}
         </span>
       </div>
 
       {/* Copy trader button */}
-      <div className="px-4 pb-4">
+      <div className="px-4 pb-4 mt-auto">
         <Link href="/sign-up" className="w-full h-10 border border-[#e5e5e5] dark:border-[#1e3827] text-[13px] font-bold text-[#001011] dark:text-white hover:bg-[#f8f8f5] dark:hover:bg-[#132b1a] transition-colors inline-flex items-center justify-center">
           Copy trader
         </Link>
@@ -161,7 +164,7 @@ function TraderCard({ trader }: { trader: Trader }) {
   );
 }
 
-/* ── Icons ─────────────────────────────────────────────────────────── */
+/* ── Icons ──────────────────────────────────────────────────────── */
 
 function ChevronLeftIcon() {
   return (

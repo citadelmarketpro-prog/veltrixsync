@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FadeUp, Stagger, StaggerItem } from "@/components/ScrollReveal";
 
 const faqs = [
   {
@@ -36,7 +37,7 @@ export default function FAQSection() {
       <div className="max-w-[1440px] mx-auto">
 
         {/* ── Centered header ── */}
-        <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16 border-t border-[#e8ead8] dark:border-[#1e3827]">
+        <FadeUp className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16 border-t border-[#e8ead8] dark:border-[#1e3827]">
           <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#0a0a0a] dark:text-white leading-tight mb-4">
             Your Questions, answered
           </h2>
@@ -44,14 +45,14 @@ export default function FAQSection() {
             Got questions about how copy trading works? We&apos;ve compiled answers to
             the most frequently asked questions.
           </p>
-        </div>
+        </FadeUp>
 
         {/* ── FAQ accordion grid ── */}
-        <div className="px-6 lg:px-[72px] pb-14 lg:pb-20 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Stagger className="px-6 lg:px-[72px] pb-14 lg:pb-20 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i;
             return (
-              <div
+              <StaggerItem
                 key={i}
                 className={[
                   "overflow-hidden transition-colors duration-200",
@@ -93,10 +94,10 @@ export default function FAQSection() {
                     </p>
                   </div>
                 )}
-              </div>
+              </StaggerItem>
             );
           })}
-        </div>
+        </Stagger>
 
       </div>
     </section>

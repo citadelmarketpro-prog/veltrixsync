@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
@@ -172,7 +172,7 @@ export default function TraderDetailPage() {
 
   const handleCopy = useCallback(async () => {
     if (!trader || !user) return;
-    const funds = parseFloat(user.balance) + parseFloat(user.profit);
+    const funds = parseFloat(user.balance) + parseFloat(user.roi ?? "0");
     const minCap = parseFloat(String(trader.min_capital));
     if (funds < minCap) {
       toast.error("Insufficient balance", {
@@ -184,8 +184,9 @@ export default function TraderDetailPage() {
       setCopyLoading(true);
       await api.post(`/api/traders/${id}/copy/`);
       setIsCopying(true);
-    } catch {
-      toast.error("Failed to start copying. Please try again.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to start copying. Please try again.";
+      toast.error(msg);
     } finally {
       setCopyLoading(false);
     }
@@ -397,6 +398,89 @@ export default function TraderDetailPage() {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   CHART HELPERS
+══════════════════════════════════════════════════════════════ */
+
+const PERIOD_LABELS: Record<string, string[]> = {
+  "1H":   ["5m", "10m", "20m", "30m", "40m", "50m", "1h"],
+  "1D":   ["4am", "8am", "12pm", "2pm", "4pm", "6pm", "8pm"],
+  "Week": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  "1W":   ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  "1M":   ["W1", "W2", "W3", "W4"],
+  "1Y":   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+};
+
+const PERIOD_DESC: Record<string, string> = {
+  "1H":   "Last hour",
+  "1D":   "Last 24 hours",
+  "Week": "This week",
+  "1W":   "Last 7 days",
+  "1M":   "Last 30 days",
+  "1Y":   "Last 12 months",
+};
+
+const PERIOD_DIVISOR: Record<string, number> = {
+  "1H": 8760, "1D": 365, "Week": 52, "1W": 52, "1M": 12, "1Y": 1,
+};
+
+const PERIOD_VOLATILITY: Record<string, number> = {
+  "1H": 30, "1D": 22, "Week": 18, "1W": 16, "1M": 12, "1Y": 8,
+};
+
+const PERIOD_POINTS: Record<string, number> = {
+  "1H": 12, "1D": 18, "Week": 7, "1W": 7, "1M": 20, "1Y": 12,
+};
+
+function seededRand(seed: number) {
+  let s = seed | 1;
+  return () => {
+    s = (s * 1664525 + 1013904223) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+}
+
+function generateChartPath(period: string, seed: number): { stroke: string; fill: string } {
+  const n   = PERIOD_POINTS[period]    ?? 12;
+  const vol = PERIOD_VOLATILITY[period] ?? 15;
+  const rand = seededRand(seed ^ (period.charCodeAt(0) * 997));
+
+  const W = 580;
+  const yStart = 165, yEnd = 12;
+  const trend = (yEnd - yStart) / (n - 1);
+
+  const pts: { x: number; y: number }[] = [];
+  let y = yStart;
+  for (let i = 0; i < n; i++) {
+    pts.push({ x: (i / (n - 1)) * W, y: Math.max(5, Math.min(188, y)) });
+    y += trend + (rand() - 0.5) * vol * 2;
+  }
+
+  let stroke = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) {
+    const p = pts[i - 1], c = pts[i];
+    const cpx = ((p.x + c.x) / 2).toFixed(1);
+    stroke += ` C${cpx},${p.y.toFixed(1)} ${cpx},${c.y.toFixed(1)} ${c.x.toFixed(1)},${c.y.toFixed(1)}`;
+  }
+
+  return { stroke, fill: `${stroke} L${W},200 L0,200 Z` };
+}
+
+function parseDollar(s: string): number {
+  const n = parseFloat(s.replace(/[$,]/g, "").replace(/K$/i, ""));
+  return s.toUpperCase().includes("K") ? n * 1000 : n || 0;
+}
+
+function parsePct(s: string): number {
+  return parseFloat(s.replace(/[%+\- ]/g, "")) || 0;
+}
+
+function formatDollar(v: number): string {
+  if (v >= 1_000_000) return `$${(v / 1_000_000).toFixed(2)}M`;
+  if (v >= 1_000)     return `$${(v / 1_000).toFixed(2)}K`;
+  return `$${v.toFixed(2)}`;
+}
+
+/* ══════════════════════════════════════════════════════════════
    OVERVIEW TAB
 ══════════════════════════════════════════════════════════════ */
 
@@ -413,6 +497,26 @@ function OverviewTab({
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const seed = useMemo(() => Math.abs(parseDollar(trader.accountAssets) | 0) || 42, [trader.accountAssets]);
+
+  const { stroke, fill } = useMemo(
+    () => generateChartPath(timeFilter, seed),
+    [timeFilter, seed],
+  );
+
+  const displayValue = useMemo(() => {
+    const div = PERIOD_DIVISOR[timeFilter] ?? 1;
+    return formatDollar(parseDollar(trader.accountAssets) / div);
+  }, [timeFilter, trader.accountAssets]);
+
+  const displayRoi = useMemo(() => {
+    const div = PERIOD_DIVISOR[timeFilter] ?? 1;
+    return `+${(parsePct(trader.roi_display) / div).toFixed(2)}%`;
+  }, [timeFilter, trader.roi_display]);
+
+  const xLabels   = PERIOD_LABELS[timeFilter] ?? [];
+  const periodDesc = PERIOD_DESC[timeFilter]  ?? "Last 90 days";
+
   return (
     <div className="flex flex-col gap-5">
       {/* Row 1: Chart + Stats */}
@@ -423,7 +527,7 @@ function OverviewTab({
             <div className="flex items-center gap-2 text-[12px] text-[#888888] dark:text-[#4a6655]">
               <span className="font-medium text-[#001011] dark:text-white">Portfolio</span>
               <span>|</span>
-              <span>Last 90 days</span>
+              <span>{periodDesc}</span>
             </div>
             <div className="flex items-center gap-0.5 overflow-x-auto [scrollbar-width:none]">
               {TIME_FILTERS.map((f) => (
@@ -444,10 +548,10 @@ function OverviewTab({
 
           <div className="flex items-baseline gap-2 mb-4">
             <span className="text-[24px] sm:text-[32px] font-bold text-[#001011] dark:text-white leading-none">
-              {trader.accountAssets}
+              {displayValue}
             </span>
             <span className="text-[13px] font-semibold text-[#16a34a] dark:text-[#22c55e] flex items-center gap-0.5">
-              {trader.roi_display}
+              {displayRoi}
               <MiniTrendUp />
             </span>
           </div>
@@ -461,12 +565,9 @@ function OverviewTab({
                   <stop offset="100%" stopColor="#B0D45A" stopOpacity="0.02" />
                 </linearGradient>
               </defs>
+              <path d={fill} fill="url(#chartFill)" />
               <path
-                d="M0,168 C10,165 15,160 22,155 C30,148 35,140 45,132 C55,124 60,130 70,126 C80,122 85,118 95,112 C105,106 110,100 120,95 C130,90 135,98 145,102 C155,106 160,100 170,94 C180,88 185,78 195,70 C205,62 210,68 220,72 C230,76 235,82 245,88 C255,94 260,100 270,106 C280,112 285,104 295,98 C305,92 310,86 320,80 C330,74 335,68 345,62 C355,56 360,64 370,70 C380,76 385,72 395,66 C405,60 410,54 420,50 C430,46 435,40 445,36 C455,32 460,26 470,22 C480,18 485,14 495,12 C505,10 510,8 520,6 C530,4 540,3 550,2 C560,1 570,1 580,0 L580,200 L0,200 Z"
-                fill="url(#chartFill)"
-              />
-              <path
-                d="M0,168 C10,165 15,160 22,155 C30,148 35,140 45,132 C55,124 60,130 70,126 C80,122 85,118 95,112 C105,106 110,100 120,95 C130,90 135,98 145,102 C155,106 160,100 170,94 C180,88 185,78 195,70 C205,62 210,68 220,72 C230,76 235,82 245,88 C255,94 260,100 270,106 C280,112 285,104 295,98 C305,92 310,86 320,80 C330,74 335,68 345,62 C355,56 360,64 370,70 C380,76 385,72 395,66 C405,60 410,54 420,50 C430,46 435,40 445,36 C455,32 460,26 470,22 C480,18 485,14 495,12 C505,10 510,8 520,6 C530,4 540,3 550,2 C560,1 570,1 580,0"
+                d={stroke}
                 fill="none"
                 stroke="#B0D45A"
                 strokeWidth="2"
@@ -477,18 +578,16 @@ function OverviewTab({
           </div>
 
           <div className="flex justify-between mt-2 px-1">
-            {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map(
-              (m, i) => (
-                <span
-                  key={m}
-                  className={`text-[10px] text-[#aaaaaa] dark:text-[#3a5040] ${
-                    i % 2 !== 0 ? "hidden sm:inline" : ""
-                  }`}
-                >
-                  {m}
-                </span>
-              )
-            )}
+            {xLabels.map((label, i) => (
+              <span
+                key={label}
+                className={`text-[10px] text-[#aaaaaa] dark:text-[#3a5040] ${
+                  xLabels.length > 8 && i % 2 !== 0 ? "hidden sm:inline" : ""
+                }`}
+              >
+                {label}
+              </span>
+            ))}
           </div>
         </div>
 

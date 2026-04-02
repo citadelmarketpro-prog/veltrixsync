@@ -1,3 +1,5 @@
+import { FadeUp, Stagger, StaggerItem } from "@/components/ScrollReveal";
+
 const features = [
   {
     title: "Transparent Options Copying",
@@ -43,7 +45,7 @@ export default function WhyChoose() {
       <div className="max-w-[1440px] mx-auto">
 
         {/* ── Header — centered ── */}
-        <div className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
+        <FadeUp className="text-center px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
           <h2 className="text-[26px] sm:text-[38px] lg:text-[52px] font-extrabold text-[#001011] dark:text-white leading-tight">
             Why choose VeltrixSync
           </h2>
@@ -51,10 +53,10 @@ export default function WhyChoose() {
             We provide the most advanced copy trading platform with enterprise-grade
             security and lightning-fast execution.
           </p>
-        </div>
+        </FadeUp>
 
         {/* ── Features grid 3×2 ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-[#e8ead8] dark:border-[#1e3827]">
+        <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-[#e8ead8] dark:border-[#1e3827]">
           {features.map((f, i) => {
             const isLastInLgRow  = (i % 3) === 2;
             const isFirstLgRow   = i < 3;
@@ -62,10 +64,10 @@ export default function WhyChoose() {
             const isFirstSmRow   = i < 2;
 
             return (
-              <div
+              <StaggerItem
                 key={i}
                 className={[
-                  "flex flex-col items-start text-left px-8 lg:px-12 py-10 lg:py-14",
+                  "flex flex-col items-center text-center sm:items-start sm:text-left px-8 lg:px-12 py-10 lg:py-14",
                   /* mobile bottom border (all but last) */
                   i < features.length - 1 ? "border-b border-[#e8ead8] dark:border-[#1e3827]" : "",
                   /* sm: right border on left col, remove bottom on last row */
@@ -86,10 +88,10 @@ export default function WhyChoose() {
                 <p className="text-[14px] lg:text-[15px] leading-[1.75] text-[#666666] dark:text-[#8fa896]">
                   {f.description}
                 </p>
-              </div>
+              </StaggerItem>
             );
           })}
-        </div>
+        </Stagger>
 
       </div>
     </section>

@@ -12,10 +12,10 @@ export default function AuthLayout({
       <div className="flex-1 flex flex-col px-6 py-10 sm:px-10 lg:px-16 xl:px-24 overflow-y-auto">
         {/* Logo */}
         <Link href="/" className="flex items-center mb-10 shrink-0">
-          <span className="font-bold text-[22px] text-[#001011] dark:text-white leading-none">
+          <span className="font-bold text-[28px] text-[#001011] dark:text-white leading-none">
             Veltrix
           </span>
-          <span className="font-bold text-[22px] text-[#B0D45A] leading-none">
+          <span className="font-bold text-[28px] text-[#B0D45A] leading-none">
             sync
           </span>
         </Link>
