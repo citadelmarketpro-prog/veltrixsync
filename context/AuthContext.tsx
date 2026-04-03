@@ -79,11 +79,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         (p) => currentPath === p || currentPath.startsWith(p + "/"),
       );
 
-      // Best-effort: ask server to clear its HttpOnly cookies; ignore errors.
-      // IMPORTANT: must use raw fetch here — api.post() retries on 401, which
-      // fires auth:expired again → infinite loop.
-      // Use direct backend URL locally (cookies live on that origin),
-      // fall back to relative path (via proxy) in production.
+      // Step 1: clear cookies via our own Next.js route — guaranteed to work
+      // even if the backend is down or the token is already invalid.
+      // This prevents the middleware from bouncing the user back to /dashboard
+      // (infinite blank-page loop) after we redirect to /sign-in.
+      try {
+        await fetch("/api/clear-session", { method: "POST", credentials: "include" });
+      } catch { /* ignore */ }
+
+      // Step 2: best-effort backend logout so the refresh token is revoked
+      // server-side. Use raw fetch — api.post() retries on 401 which would
+      // fire auth:expired again and create an infinite loop.
       const logoutUrl = process.env.NEXT_PUBLIC_API_URL
         ? `${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout/`
         : "/api/auth/logout/";
@@ -123,10 +129,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(async () => {
+    // Clear cookies on the Next.js side first so they're gone before redirect.
+    try {
+      await fetch("/api/clear-session", { method: "POST", credentials: "include" });
+    } catch { /* ignore */ }
+    // Then revoke the refresh token on the backend (best-effort).
     try {
       await api.post("/api/auth/logout/");
     } catch (e) {
-      // Ignore errors — clear client state regardless
       if (!(e instanceof ApiError)) throw e;
     }
     setUser(null);

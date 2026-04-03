@@ -4,6 +4,14 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
+function SessionSpinner() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+    </div>
+  );
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -24,10 +32,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [user, loading, pathname, router]);
 
-  // While loading or redirecting, render nothing to avoid flash
-  if (loading) return null;
-  if (!user) return null;
-  if (user.kyc_status === "not_submitted" && pathname !== "/kyc") return null;
+  // Show a spinner while loading or while the redirect is in flight.
+  // This prevents the blank white page users would otherwise see during
+  // the gap between detecting an invalid session and navigation completing.
+  if (loading) return <SessionSpinner />;
+  if (!user) return <SessionSpinner />;
+  if (user.kyc_status === "not_submitted" && pathname !== "/kyc") return <SessionSpinner />;
 
   return <>{children}</>;
 }
