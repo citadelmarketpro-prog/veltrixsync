@@ -1016,10 +1016,11 @@ function WithdrawModal({ onClose }: { onClose: () => void }) {
 ════════════════════════════════════════════════════════════════ */
 
 function TradeAssetIcon({ asset }: { asset: string }) {
-  const meta   = getAssetMeta(asset);
+  const meta     = getAssetMeta(asset);
   const initials = asset.replace("/", "").slice(0, 3).toUpperCase();
+  const [imgFailed, setImgFailed] = useState(false);
 
-  if (meta.icon) {
+  if (meta.icon && !imgFailed) {
     return (
       <div
         className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
@@ -1031,7 +1032,7 @@ function TradeAssetIcon({ asset }: { asset: string }) {
           width={28}
           height={28}
           className="object-contain"
-          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+          onError={() => setImgFailed(true)}
         />
       </div>
     );

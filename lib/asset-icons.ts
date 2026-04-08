@@ -1,10 +1,9 @@
 /**
  * Asset icon mapping for the Trade Copied section.
  *
- * `color`  — badge background color shown as fallback / behind the icon
- * `textColor` — text color for the ticker initials
- * `icon`   — path relative to /public/trade-assets/ (add the PNG/SVG there to show a logo)
- *             Leave as null to show the colored-initial badge instead.
+ * `color`     — badge background color (used as fallback / icon backdrop)
+ * `textColor` — text color for the ticker initials fallback
+ * `icon`      — direct image URL (Cloudinary, etc.), or null to show initials badge
  */
 
 export interface AssetMeta {
@@ -13,46 +12,43 @@ export interface AssetMeta {
   icon:      string | null;
 }
 
-const STOCK_COLOR  = { color: "#1e293b", textColor: "#94a3b8" };
-const CRYPTO_COLOR = { color: "#1c1a0e", textColor: "#f59e0b" };
-const FOREX_COLOR  = { color: "#0a1e14", textColor: "#4ade80" };
-
 const ASSET_META: Record<string, AssetMeta> = {
+
   // ── Stocks ──────────────────────────────────────────────────────────────────
-  AAPL:  { color: "#1c1c1e", textColor: "#e2e2e2", icon: "/trade-assets/AAPL.png"  },
-  MSFT:  { color: "#0a2240", textColor: "#5ba4f5", icon: "/trade-assets/MSFT.png"  },
-  GOOGL: { color: "#0d1f12", textColor: "#34a853", icon: "/trade-assets/GOOGL.png" },
-  AMZN:  { color: "#1a0f00", textColor: "#ff9900", icon: "/trade-assets/AMZN.png"  },
-  TSLA:  { color: "#1a0505", textColor: "#e82127", icon: "/trade-assets/TSLA.png"  },
-  META:  { color: "#001a3a", textColor: "#1877f2", icon: "/trade-assets/META.png"  },
-  NVDA:  { color: "#0d1a0d", textColor: "#76b900", icon: "/trade-assets/NVDA.png"  },
-  JPM:   { ...STOCK_COLOR, icon: null },
-  NFLX:  { color: "#1a0404", textColor: "#e50914", icon: "/trade-assets/NFLX.png"  },
-  SPY:   { ...STOCK_COLOR, icon: null },
-  QQQ:   { ...STOCK_COLOR, icon: null },
-  BAC:   { ...STOCK_COLOR, icon: null },
-  V:     { color: "#00017a", textColor: "#f7a600", icon: "/trade-assets/V.png"     },
-  AMD:   { color: "#1a0505", textColor: "#ed1c24", icon: null },
-  WMT:   { color: "#002d62", textColor: "#ffc220", icon: null },
-  DIS:   { ...STOCK_COLOR, icon: null },
-  PYPL:  { color: "#001432", textColor: "#009cde", icon: null },
+  AAPL:  { color: "#1c1c1e", textColor: "#e2e2e2", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768483429/AAPL_meg5uo.jpg" },
+  MSFT:  { color: "#0a2240", textColor: "#5ba4f5", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482104/MSFT_jg76ey.webp" },
+  GOOGL: { color: "#0d1f12", textColor: "#34a853", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482264/googl_jb5hhg.webp" },
+  AMZN:  { color: "#1a0f00", textColor: "#ff9900", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482319/Amazon_icon_c2x9qa.png" },
+  TSLA:  { color: "#1a0505", textColor: "#e82127", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768481807/Tesla__Inc.-Logo.wine_wwoywg.png" },
+  META:  { color: "#001a3a", textColor: "#1877f2", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482446/Meta_Platforms-Logo.wine_zzmw1l.png" },
+  NVDA:  { color: "#0d1a0d", textColor: "#76b900", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768481834/Nvidia-Logo.wine_yo5q4t.png" },
+  JPM:   { color: "#001a3a", textColor: "#5ba4f5", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482867/JPM_btmunm.jpg" },
+  NFLX:  { color: "#1a0404", textColor: "#e50914", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482473/Netflix-Symbol_r7jspj.png" },
+  SPY:   { color: "#1e293b", textColor: "#94a3b8", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768485376/SPY_cdsxvi.png" },
+  QQQ:   { color: "#1e293b", textColor: "#94a3b8", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768485415/QQQ_ez5rlo.png" },
+  BAC:   { color: "#001a3a", textColor: "#5ba4f5", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482921/BAC_vns4wa.png" },
+  V:     { color: "#00017a", textColor: "#f7a600", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768483228/visa_aw2sla.png" },
+  AMD:   { color: "#1a0505", textColor: "#ed1c24", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768481985/Advanced_Micro_Devices-Logo.wine_shieiv.png" },
+  WMT:   { color: "#002d62", textColor: "#ffc220", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482990/WMT_xdtp3q.png" },
+  DIS:   { color: "#001a3a", textColor: "#5ba4f5", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768483074/DIS_n9o5md.png" },
+  PYPL:  { color: "#001432", textColor: "#009cde", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768483362/PYPL_p0lepo.png" },
   COIN:  { color: "#001e3c", textColor: "#0052ff", icon: null },
-  SPX:   { ...STOCK_COLOR, icon: null },
-  NDX:   { ...STOCK_COLOR, icon: null },
+  SPX:   { color: "#1e293b", textColor: "#94a3b8", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768481285/spx-express-indonesia-seeklogo_y48fw2.png" },
+  NDX:   { color: "#1e293b", textColor: "#94a3b8", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768484442/NDX_yu49af.png" },
   BABA:  { color: "#1a0900", textColor: "#ff6a00", icon: null },
-  INTC:  { color: "#001a40", textColor: "#0071c5", icon: null },
-  GS:    { ...STOCK_COLOR, icon: null },
-  MS:    { ...STOCK_COLOR, icon: null },
+  INTC:  { color: "#001a40", textColor: "#0071c5", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768482618/intel_zwi8d7.png" },
+  GS:    { color: "#1e293b", textColor: "#94a3b8", icon: null },
+  MS:    { color: "#1e293b", textColor: "#94a3b8", icon: null },
   UBER:  { color: "#0d0d0d", textColor: "#ffffff", icon: null },
 
   // ── Crypto ──────────────────────────────────────────────────────────────────
-  BTC:   { color: "#1a0e00", textColor: "#f7931a", icon: "/trade-assets/BTC.png"   },
-  ETH:   { color: "#0d0d2a", textColor: "#627eea", icon: "/trade-assets/ETH.png"   },
-  BNB:   { color: "#1a1400", textColor: "#f3ba2f", icon: "/trade-assets/BNB.png"   },
-  SOL:   { color: "#0a0a1a", textColor: "#9945ff", icon: "/trade-assets/SOL.png"   },
-  XRP:   { color: "#001a2a", textColor: "#00aae4", icon: "/trade-assets/XRP.png"   },
+  BTC:   { color: "#1a0e00", textColor: "#f7931a", icon: null },
+  ETH:   { color: "#0d0d2a", textColor: "#627eea", icon: null },
+  BNB:   { color: "#1a1400", textColor: "#f3ba2f", icon: null },
+  SOL:   { color: "#0a0a1a", textColor: "#9945ff", icon: null },
+  XRP:   { color: "#001a2a", textColor: "#00aae4", icon: null },
   ADA:   { color: "#000d2a", textColor: "#0d83cd", icon: null },
-  DOGE:  { color: "#1a1400", textColor: "#c3a634", icon: "/trade-assets/DOGE.png"  },
+  DOGE:  { color: "#1a1400", textColor: "#c3a634", icon: null },
   AVAX:  { color: "#1a0000", textColor: "#e84142", icon: null },
   DOT:   { color: "#1a0010", textColor: "#e6007a", icon: null },
   MATIC: { color: "#0d0025", textColor: "#8247e5", icon: null },
@@ -68,20 +64,20 @@ const ASSET_META: Record<string, AssetMeta> = {
   ARB:   { color: "#001a2a", textColor: "#28a0f0", icon: null },
 
   // ── Forex ───────────────────────────────────────────────────────────────────
-  "EUR/USD": { ...FOREX_COLOR, icon: null },
-  "GBP/USD": { ...FOREX_COLOR, icon: null },
-  "USD/JPY": { ...FOREX_COLOR, icon: null },
-  "USD/CHF": { ...FOREX_COLOR, icon: null },
-  "AUD/USD": { ...FOREX_COLOR, icon: null },
-  "USD/CAD": { ...FOREX_COLOR, icon: null },
-  "NZD/USD": { ...FOREX_COLOR, icon: null },
-  "EUR/GBP": { ...FOREX_COLOR, icon: null },
-  "EUR/JPY": { ...FOREX_COLOR, icon: null },
-  "GBP/JPY": { ...FOREX_COLOR, icon: null },
-  "EUR/CHF": { ...FOREX_COLOR, icon: null },
-  "AUD/JPY": { ...FOREX_COLOR, icon: null },
-  "USD/MXN": { ...FOREX_COLOR, icon: null },
-  "USD/ZAR": { ...FOREX_COLOR, icon: null },
+  "EUR/USD": { color: "#0a1e14", textColor: "#4ade80", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768483658/EURUSD_esh2vx.png" },
+  "GBP/USD": { color: "#0a1e14", textColor: "#4ade80", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768484686/GBPUSD_bfuz6d.png" },
+  "USD/JPY": { color: "#0a1e14", textColor: "#4ade80", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768484792/USDJPY_lqsfsf.png" },
+  "USD/CHF": { color: "#0a1e14", textColor: "#4ade80", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768485021/USDCHF_cmofc9.jpg" },
+  "AUD/USD": { color: "#0a1e14", textColor: "#4ade80", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768484910/AUDUSD_t9dpps.png" },
+  "USD/CAD": { color: "#0a1e14", textColor: "#4ade80", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768484974/USDCAD_zggbbx.jpg" },
+  "NZD/USD": { color: "#0a1e14", textColor: "#4ade80", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768485097/NZDUSD_cgh0ns.jpg" },
+  "EUR/GBP": { color: "#0a1e14", textColor: "#4ade80", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768485157/EURGBP_benw9p.jpg" },
+  "EUR/JPY": { color: "#0a1e14", textColor: "#4ade80", icon: null },
+  "GBP/JPY": { color: "#0a1e14", textColor: "#4ade80", icon: null },
+  "EUR/CHF": { color: "#0a1e14", textColor: "#4ade80", icon: null },
+  "AUD/JPY": { color: "#0a1e14", textColor: "#4ade80", icon: null },
+  "USD/MXN": { color: "#0a1e14", textColor: "#4ade80", icon: null },
+  "USD/ZAR": { color: "#0a1e14", textColor: "#4ade80", icon: null },
 };
 
 const FALLBACK: AssetMeta = { color: "#1e2a20", textColor: "#8fa896", icon: null };
