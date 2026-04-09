@@ -43,8 +43,8 @@ const ASSET_META: Record<string, AssetMeta> = {
 
   // ── Crypto ──────────────────────────────────────────────────────────────────
   BTC:   { color: "#1a0e00", textColor: "#f7931a", icon: null },
-  ETH:   { color: "#0d0d2a", textColor: "#627eea", icon: null },
-  BNB:   { color: "#1a1400", textColor: "#f3ba2f", icon: null },
+  ETH:   { color: "#0d0d2a", textColor: "#627eea", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768553418/Ethereumtradeview_ud2inq.jpg" },
+  BNB:   { color: "#1a1400", textColor: "#f3ba2f", icon: "https://res.cloudinary.com/dkii82r08/image/upload/v1768553458/BNB_d2eppm.jpg" },
   SOL:   { color: "#0a0a1a", textColor: "#9945ff", icon: null },
   XRP:   { color: "#001a2a", textColor: "#00aae4", icon: null },
   ADA:   { color: "#000d2a", textColor: "#0d83cd", icon: null },

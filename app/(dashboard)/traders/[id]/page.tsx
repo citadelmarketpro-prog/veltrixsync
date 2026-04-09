@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import DashNav from "@/components/DashNav";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import { getAssetMeta } from "@/lib/asset-icons";
 
 /* ══════════════════════════════════════════════════════════════
    TYPES
@@ -668,14 +669,19 @@ function OverviewTab({
                       : ""
                   }`}
                 >
-                  <div className="w-9 h-9 rounded-full bg-[#1a1a1a] dark:bg-[#0a1008] flex items-center justify-center shrink-0 overflow-hidden">
-                    {asset.icon_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={asset.icon_url} alt={asset.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-[9px] font-bold text-white">{asset.name[0]}</span>
-                    )}
-                  </div>
+                  {(() => {
+                    const meta = getAssetMeta(asset.ticker);
+                    return (
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 overflow-hidden" style={{ backgroundColor: meta.color }}>
+                        {meta.icon ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={meta.icon} alt={asset.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-[9px] font-bold" style={{ color: meta.textColor }}>{asset.ticker}</span>
+                        )}
+                      </div>
+                    );
+                  })()}
                   <div className="w-[90px] sm:w-[110px] shrink-0">
                     <p className="text-[13px] font-semibold text-[#001011] dark:text-white">
                       {asset.name}
@@ -804,7 +810,19 @@ function PortfolioTab({ positions }: { positions: Position[] }) {
               <tr key={i} className="border-b border-[#f5f5f0] dark:border-[#192e1e] last:border-0">
                 <td className="py-4 pr-4">
                   <div className="flex items-center gap-3">
-                    <XMarkCircleIcon />
+                    {(() => {
+                      const meta = getAssetMeta(pos.market);
+                      return (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 overflow-hidden" style={{ backgroundColor: meta.color }}>
+                          {meta.icon ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={meta.icon} alt={pos.market} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-[8px] font-bold" style={{ color: meta.textColor }}>{pos.market}</span>
+                          )}
+                        </div>
+                      );
+                    })()}
                     <div>
                       <p className="text-[13px] font-semibold text-[#001011] dark:text-white">
                         {pos.market}
@@ -857,7 +875,7 @@ function TradeHistoryTab({ history }: { history: TradeHistoryItem[] }) {
           <thead>
             <tr className="border-b border-[#f0f0ec] dark:border-[#1e3827]">
               <th className="text-left py-2.5 text-[12px] font-medium text-[#888888] dark:text-[#4a6655] pr-4">
-                ETH/USD ({history.length})
+                Trades ({history.length})
               </th>
               <th className="text-left py-2.5 text-[12px] font-medium text-[#888888] dark:text-[#4a6655] pr-4">
                 Order Type
@@ -881,7 +899,19 @@ function TradeHistoryTab({ history }: { history: TradeHistoryItem[] }) {
               <tr key={i} className="border-b border-[#f5f5f0] dark:border-[#192e1e] last:border-0">
                 <td className="py-4 pr-4">
                   <div className="flex items-center gap-3">
-                    <XMarkCircleIcon />
+                    {(() => {
+                      const meta = getAssetMeta(trade.name);
+                      return (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 overflow-hidden" style={{ backgroundColor: meta.color }}>
+                          {meta.icon ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={meta.icon} alt={trade.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-[8px] font-bold" style={{ color: meta.textColor }}>{trade.name}</span>
+                          )}
+                        </div>
+                      );
+                    })()}
                     <div>
                       <p className="text-[13px] font-semibold text-[#001011] dark:text-white">
                         {trade.name}
@@ -965,7 +995,11 @@ function CopiersTab({ copiers }: { copiers: Copier[] }) {
               <tr key={i} className="border-b border-[#f5f5f0] dark:border-[#192e1e] last:border-0">
                 <td className="py-4 pr-4">
                   <div className="flex items-center gap-3">
-                    <XMarkCircleIcon />
+                    <div className="w-10 h-10 rounded-full bg-[#1e3827] dark:bg-[#0e2016] flex items-center justify-center shrink-0">
+                      <span className="text-[13px] font-bold text-[#B0D45A]">
+                        {c.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()}
+                      </span>
+                    </div>
                     <div>
                       <p className="text-[13px] font-semibold text-[#001011] dark:text-white">
                         {c.name}
