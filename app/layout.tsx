@@ -23,8 +23,16 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+// Resolves correctly in every environment:
+//   - Production custom domain → set NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+//   - Vercel preview deploys  → VERCEL_URL is injected automatically
+//   - Local dev               → falls back to http://localhost:3000
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://veltrixsync.com"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Veltrixsync — Copy Trading Platform",
     template: "%s | Veltrixsync",
