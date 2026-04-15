@@ -6,6 +6,8 @@ import Preloader from "@/components/Preloader";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
 
+import Script from "next/script";
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
@@ -123,6 +125,12 @@ export default function RootLayout({
             <Toaster richColors position="top-center" />
           </AuthProvider>
         </ThemeProvider>
+
+        <Script
+          src="//code.jivosite.com/widget/2Rfs1A2vFt"
+          strategy="afterInteractive"
+        /> 
+
       </body>
     </html>
   );
