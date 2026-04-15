@@ -1,3 +1,22 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Trading tips, platform updates, market insights, and community stories from the Veltrixsync team. Stay informed and invest smarter.",
+  openGraph: {
+    title: "Blog | Veltrixsync",
+    description:
+      "Trading tips, platform updates, market insights, and community stories from the Veltrixsync team.",
+    url: "https://veltrixsync.com/blog",
+  },
+  twitter: {
+    title: "Blog | Veltrixsync",
+    description:
+      "Trading tips, platform updates, market insights, and community stories from the Veltrixsync team.",
+  },
+};
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 

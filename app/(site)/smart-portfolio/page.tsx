@@ -1,3 +1,22 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Smart Portfolio",
+  description:
+    "Build a diversified investment portfolio automatically with Veltrixsync Smart Portfolio. Intelligent allocation across top-performing traders and asset classes.",
+  openGraph: {
+    title: "Smart Portfolio | Veltrixsync",
+    description:
+      "Build a diversified investment portfolio automatically. Intelligent allocation across top-performing traders and asset classes.",
+    url: "https://veltrixsync.com/smart-portfolio",
+  },
+  twitter: {
+    title: "Smart Portfolio | Veltrixsync",
+    description:
+      "Build a diversified investment portfolio automatically. Intelligent allocation across top-performing traders and asset classes.",
+  },
+};
+
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";

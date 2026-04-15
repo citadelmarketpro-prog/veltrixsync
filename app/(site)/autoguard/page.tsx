@@ -1,3 +1,22 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "AutoGuard Risk Protection",
+  description:
+    "Protect your investments with Veltrixsync AutoGuard. Automated risk management that sets stop-loss limits, monitors drawdown, and safeguards your capital 24/7.",
+  openGraph: {
+    title: "AutoGuard Risk Protection | Veltrixsync",
+    description:
+      "Automated risk management that sets stop-loss limits, monitors drawdown, and safeguards your capital 24/7.",
+    url: "https://veltrixsync.com/autoguard",
+  },
+  twitter: {
+    title: "AutoGuard Risk Protection | Veltrixsync",
+    description:
+      "Automated risk management that sets stop-loss limits, monitors drawdown, and safeguards your capital 24/7.",
+  },
+};
+
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";

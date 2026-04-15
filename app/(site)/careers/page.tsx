@@ -1,3 +1,22 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Careers",
+  description:
+    "Join the Veltrixsync team. We're hiring engineers, designers, and financial professionals passionate about democratising investing. View open roles.",
+  openGraph: {
+    title: "Careers | Veltrixsync",
+    description:
+      "Join the Veltrixsync team. We're hiring engineers, designers, and financial professionals passionate about democratising investing.",
+    url: "https://veltrixsync.com/careers",
+  },
+  twitter: {
+    title: "Careers | Veltrixsync",
+    description:
+      "Join the Veltrixsync team. We're hiring engineers, designers, and financial professionals passionate about democratising investing.",
+  },
+};
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 

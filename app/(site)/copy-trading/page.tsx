@@ -1,3 +1,22 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Copy Trading",
+  description:
+    "Discover how Veltrixsync copy trading works. Follow expert traders, mirror their positions in real time, and grow your portfolio without years of experience.",
+  openGraph: {
+    title: "Copy Trading | Veltrixsync",
+    description:
+      "Follow expert traders and mirror their positions in real time. Grow your portfolio without years of experience.",
+    url: "https://veltrixsync.com/copy-trading",
+  },
+  twitter: {
+    title: "Copy Trading | Veltrixsync",
+    description:
+      "Follow expert traders and mirror their positions in real time. Grow your portfolio without years of experience.",
+  },
+};
+
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";

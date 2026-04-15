@@ -1,3 +1,22 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Company",
+  description:
+    "Learn about Veltrixsync — our mission to make expert-level investing accessible to everyone, our story, values, and the team behind the platform.",
+  openGraph: {
+    title: "Company | Veltrixsync",
+    description:
+      "Learn about Veltrixsync — our mission to make expert-level investing accessible to everyone, our story, values, and the team behind the platform.",
+    url: "https://veltrixsync.com/company",
+  },
+  twitter: {
+    title: "Company | Veltrixsync",
+    description:
+      "Learn about Veltrixsync — our mission to make expert-level investing accessible to everyone.",
+  },
+};
+
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";

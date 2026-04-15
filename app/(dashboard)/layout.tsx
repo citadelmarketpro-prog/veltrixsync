@@ -1,43 +1,14 @@
-"use client";
+import type { Metadata } from "next";
+import DashboardGuard from "./DashboardGuard";
 
-import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-
-function SessionSpinner() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-    </div>
-  );
-}
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: { index: false, follow: false },
+  },
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (loading) return;
-
-    // Session expired or not logged in — redirect to sign-in
-    if (!user) {
-      router.replace(`/sign-in?next=${encodeURIComponent(pathname)}`);
-      return;
-    }
-
-    // If KYC not yet submitted, force user to /kyc regardless of where they try to go
-    if (user.kyc_status === "not_submitted" && pathname !== "/kyc") {
-      router.replace("/kyc");
-    }
-  }, [user, loading, pathname, router]);
-
-  // Show a spinner while loading or while the redirect is in flight.
-  // This prevents the blank white page users would otherwise see during
-  // the gap between detecting an invalid session and navigation completing.
-  if (loading) return <SessionSpinner />;
-  if (!user) return <SessionSpinner />;
-  if (user.kyc_status === "not_submitted" && pathname !== "/kyc") return <SessionSpinner />;
-
-  return <>{children}</>;
+  return <DashboardGuard>{children}</DashboardGuard>;
 }

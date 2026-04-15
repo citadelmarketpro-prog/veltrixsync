@@ -1,3 +1,22 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Press",
+  description:
+    "Veltrixsync in the news. Read the latest press coverage, media mentions, and official press releases about our copy trading platform.",
+  openGraph: {
+    title: "Press | Veltrixsync",
+    description:
+      "Veltrixsync in the news. Latest press coverage, media mentions, and official press releases.",
+    url: "https://veltrixsync.com/press",
+  },
+  twitter: {
+    title: "Press | Veltrixsync",
+    description:
+      "Veltrixsync in the news. Latest press coverage, media mentions, and official press releases.",
+  },
+};
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 

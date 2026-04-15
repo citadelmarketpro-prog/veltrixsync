@@ -1,3 +1,29 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Copy Top Traders Automatically",
+  description:
+    "Join Veltrixsync and automatically copy the trades of expert investors. Start building your portfolio today with real-time trade signals and smart risk management.",
+  keywords: [
+    "copy trading platform",
+    "copy top traders",
+    "auto trade copy",
+    "signal trading",
+    "social investing",
+  ],
+  openGraph: {
+    title: "Veltrixsync — Copy Top Traders Automatically",
+    description:
+      "Join Veltrixsync and automatically copy the trades of expert investors. Real-time signals, smart portfolios, and AutoGuard risk protection.",
+    url: "https://veltrixsync.com",
+  },
+  twitter: {
+    title: "Veltrixsync — Copy Top Traders Automatically",
+    description:
+      "Join Veltrixsync and automatically copy the trades of expert investors. Real-time signals, smart portfolios, and AutoGuard risk protection.",
+  },
+};
+
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
