@@ -126,10 +126,10 @@ export default function RootLayout({
           </AuthProvider>
         </ThemeProvider>
 
-        {/* <Script
+        <Script
           src="//code.jivosite.com/widget/2Rfs1A2vFt"
           strategy="afterInteractive"
-        />  */}
+        /> 
 
       </body>
     </html>
