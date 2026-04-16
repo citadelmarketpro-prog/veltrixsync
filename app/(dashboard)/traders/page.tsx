@@ -799,5 +799,3 @@ function SyncIcon({ color = "currentColor" }: { color?: string }) {
   );
 }
 
-// Exported for internal use only — not actually used in JSX but kept for consistency
-export { NotificationDropdown };
